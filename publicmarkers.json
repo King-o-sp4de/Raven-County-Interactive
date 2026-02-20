@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "latlng": {
+      "lat": 99.55317488612138,
+      "lng": 2848
+    },
+    "type": "safezone",
+    "name": "Safezone"
+  }
+]
