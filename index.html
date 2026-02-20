@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Raven County Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#111111">
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark">
+
+<div id="app">
+
+  <div id="topbar">
+    <button onclick="startMarkerPlacement()">📍 Add Marker</button>
+    <button onclick="toggleTheme()">🌗 Theme</button>
+    <button onclick="toggleGrid()">🟦 Grid</button>
+    <button onclick="startMeasure()">📏 Measure</button>
+    <button onclick="centerMap()">🎯 Center 0,0</button>
+    <button onclick="openLogin()">🔐 Login</button>
+    <button onclick="startTownPlacement()">🏙 Add Town</button>
+    <button onclick="exportTownLabels()">💾 Export Towns</button>
+    <button onclick="exportPublicMarkers()">💾 Export Public</button>
+    <button onclick="logout()">Logout</button>
+    <span id="userDisplay"></span>
+  </div>
+
+  <div id="map"></div>
+
+  <div id="legend" class="panel">
+    <b>Legend</b><br>
+    🔴 House<br>
+    🟠 Trader<br>
+    🟡 Tower<br>
+    🟢 Tent<br>
+    🔵 Safezone<br>
+    🟣 Infrastructure
+  </div>
+
+  <div id="coordsBox" class="panel"></div>
+
+</div>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal hidden">
+  <div class="modal-content">
+    <h3>Login</h3>
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button onclick="closeLogin()">Cancel</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
+
