@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "latlng": {
+      "lat": 908.5746619272061,
+      "lng": 1192
+    },
+    "name": "Lombant"
+  },
+  {
+    "latlng": {
+      "lat": 2276.1492628382352,
+      "lng": 1472
+    },
+    "name": "Quartine"
+  },
+  {
+    "latlng": {
+      "lat": 2720.0111947128676,
+      "lng": 12
+    },
+    "name": "Nomand (Airfield)"
+  },
+  {
+    "latlng": {
+      "lat": 1576.3706693816177,
+      "lng": 2420
+    },
+    "name": "North Wrock"
+  },
+  {
+    "latlng": {
+      "lat": 112.82592103823526,
+      "lng": 884
+    },
+    "name": "Shonto"
+  },
+  {
+    "latlng": {
+      "lat": 108.82716489522045,
+      "lng": 2788
+    },
+    "name": "Safezone"
+  }
+]
