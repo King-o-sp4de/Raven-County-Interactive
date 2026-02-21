@@ -89,26 +89,498 @@
   },
   {
     "latlng": {
-      "lat": 2423.4903618975577,
-      "lng": 1359
-    },
-    "type": "house",
-    "name": "Police Station"
-  },
-  {
-    "latlng": {
-      "lat": 2418.991656568035,
-      "lng": 1347.5
-    },
-    "type": "infrastructure",
-    "name": "Extraction Point"
-  },
-  {
-    "latlng": {
       "lat": 2344.878524380744,
       "lng": 1340.625
     },
     "type": "tower",
     "name": "Tower (1)"
+  },
+  {
+    "latlng": {
+      "lat": 2318.8055989043874,
+      "lng": 1369.25
+    },
+    "type": "hospital",
+    "name": "Hospital"
+  },
+  {
+    "latlng": {
+      "lat": 2430.7733759947296,
+      "lng": 1388.25
+    },
+    "type": "tower",
+    "name": "Cell Tower"
+  },
+  {
+    "latlng": {
+      "lat": 2424.0253180004456,
+      "lng": 1360.25
+    },
+    "type": "police",
+    "name": "Police Station"
+  },
+  {
+    "latlng": {
+      "lat": 2418.5269003754734,
+      "lng": 1348.25
+    },
+    "type": "extraction",
+    "name": "Extraction Point"
+  },
+  {
+    "latlng": {
+      "lat": 2352.295960801945,
+      "lng": 1361.75
+    },
+    "type": "tower",
+    "name": "Tower (2)"
+  },
+  {
+    "latlng": {
+      "lat": 2278.7875454438426,
+      "lng": 1341
+    },
+    "type": "tower",
+    "name": "Tower (3)"
+  },
+  {
+    "latlng": {
+      "lat": 2269.540206710935,
+      "lng": 1393.25
+    },
+    "type": "tower",
+    "name": "Tower (4)"
+  },
+  {
+    "latlng": {
+      "lat": 2351.766543011655,
+      "lng": 1382.25
+    },
+    "type": "tower",
+    "name": "Tower (5)"
+  },
+  {
+    "latlng": {
+      "lat": 2317.776324966372,
+      "lng": 1422
+    },
+    "type": "tower",
+    "name": "Tower (6)"
+  },
+  {
+    "latlng": {
+      "lat": 2347.0179096082697,
+      "lng": 1421
+    },
+    "type": "tower",
+    "name": "Tower (7)"
+  },
+  {
+    "latlng": {
+      "lat": 2343.768844648059,
+      "lng": 1457.25
+    },
+    "type": "tower",
+    "name": "Tower (8)"
+  },
+  {
+    "latlng": {
+      "lat": 2372.0107169945068,
+      "lng": 1493.75
+    },
+    "type": "tower",
+    "name": "Tower (9)"
+  },
+  {
+    "latlng": {
+      "lat": 2268.2905663416227,
+      "lng": 1430
+    },
+    "type": "tower",
+    "name": "Tower (10)"
+  },
+  {
+    "latlng": {
+      "lat": 2270.539919006384,
+      "lng": 1473
+    },
+    "type": "tower",
+    "name": "Tower (11)"
+  },
+  {
+    "latlng": {
+      "lat": 2333.521793619702,
+      "lng": 1492.25
+    },
+    "type": "tower",
+    "name": "Tower (12)"
+  },
+  {
+    "latlng": {
+      "lat": 2362.2635221138744,
+      "lng": 1548.75
+    },
+    "type": "infrastructure",
+    "name": "Church"
+  },
+  {
+    "latlng": {
+      "lat": 2362.2635221138744,
+      "lng": 1586
+    },
+    "type": "specialloot",
+    "name": "God Has Provided"
+  },
+  {
+    "latlng": {
+      "lat": 2244.047543176973,
+      "lng": 1550.25
+    },
+    "type": "infrastructure",
+    "name": "FootBall Stadium"
+  },
+  {
+    "latlng": {
+      "lat": 2244.2974712508353,
+      "lng": 1553.5
+    },
+    "type": "specialloot",
+    "name": "Special Drop (Dynamic)"
+  },
+  {
+    "latlng": {
+      "lat": 2206.0332298755848,
+      "lng": 1408
+    },
+    "type": "infrastructure",
+    "name": "Mall"
+  },
+  {
+    "latlng": {
+      "lat": 2164.0453134667064,
+      "lng": 1529.25
+    },
+    "type": "house",
+    "name": "Generic House"
+  },
+  {
+    "latlng": {
+      "lat": 2133.8040165293596,
+      "lng": 1528.5
+    },
+    "type": "house",
+    "name": "Generic House"
+  },
+  {
+    "latlng": {
+      "lat": 2154.5480466599365,
+      "lng": 1601.75
+    },
+    "type": "house",
+    "name": "Apartment Complex"
+  },
+  {
+    "latlng": {
+      "lat": 942.0201033554674,
+      "lng": 1172.625
+    },
+    "type": "infrastructure",
+    "name": "Mall"
+  },
+  {
+    "latlng": {
+      "lat": 718.0183411650954,
+      "lng": 1224.25
+    },
+    "type": "infrastructure",
+    "name": "Gas Station"
+  },
+  {
+    "latlng": {
+      "lat": 759.5699982998478,
+      "lng": 994.125
+    },
+    "type": "tower",
+    "name": "Tower (9)"
+  },
+  {
+    "latlng": {
+      "lat": 836.7600876408025,
+      "lng": 1107.75
+    },
+    "type": "tower",
+    "name": "Tower (9)"
+  },
+  {
+    "latlng": {
+      "lat": 846.760285437681,
+      "lng": 1198.5
+    },
+    "type": "tower",
+    "name": "Hotel"
+  },
+  {
+    "latlng": {
+      "lat": 864.2525893409546,
+      "lng": 1257.25
+    },
+    "type": "tower",
+    "name": "Tower (11)"
+  },
+  {
+    "latlng": {
+      "lat": 924.0489097735879,
+      "lng": 1378
+    },
+    "type": "tower",
+    "name": "Tower (13)"
+  },
+  {
+    "latlng": {
+      "lat": 880.052937637295,
+      "lng": 1447
+    },
+    "type": "house",
+    "name": "Apartment Complex"
+  },
+  {
+    "latlng": {
+      "lat": 816.5712068762529,
+      "lng": 1447
+    },
+    "type": "house",
+    "name": "Apartment Complex"
+  },
+  {
+    "latlng": {
+      "lat": 707.2573904106414,
+      "lng": 1416.375
+    },
+    "type": "extraction",
+    "name": "Extraction Point"
+  },
+  {
+    "latlng": {
+      "lat": 705.38091592482,
+      "lng": 1417.375
+    },
+    "type": "tower",
+    "name": "<Failed to execute at 'Tower (14)' at lng:9 lat:832.9558>"
+  },
+  {
+    "latlng": {
+      "lat": 1022.5293458641527,
+      "lng": 1194
+    },
+    "type": "tower",
+    "name": "Tower (7)"
+  },
+  {
+    "latlng": {
+      "lat": 1144.9941020567144,
+      "lng": 1229.5
+    },
+    "type": "tower",
+    "name": "Tower (6)"
+  },
+  {
+    "latlng": {
+      "lat": 1036.9999640369313,
+      "lng": 1308
+    },
+    "type": "infrastructure",
+    "name": "Church"
+  },
+  {
+    "latlng": {
+      "lat": 1037.1249280738623,
+      "lng": 1319
+    },
+    "type": "specialloot",
+    "name": "God Has Provided"
+  },
+  {
+    "latlng": {
+      "lat": 1077.9818746133174,
+      "lng": 1306.5
+    },
+    "type": "tower",
+    "name": "Apartments"
+  },
+  {
+    "latlng": {
+      "lat": 1077.8718352499443,
+      "lng": 1291.625
+    },
+    "type": "tower",
+    "name": "Apartments"
+  },
+  {
+    "latlng": {
+      "lat": 1086.369389761265,
+      "lng": 1294.5
+    },
+    "type": "tower",
+    "name": "Apartments"
+  },
+  {
+    "latlng": {
+      "lat": 1085.9944976504714,
+      "lng": 1287.25
+    },
+    "type": "tower",
+    "name": "Apartments"
+  },
+  {
+    "latlng": {
+      "lat": 1095.7416925311038,
+      "lng": 1294.375
+    },
+    "type": "tower",
+    "name": "Apartments"
+  },
+  {
+    "latlng": {
+      "lat": 1095.7416925311038,
+      "lng": 1287
+    },
+    "type": "tower",
+    "name": "Apartments"
+  },
+  {
+    "latlng": {
+      "lat": 1157.5988908120407,
+      "lng": 1304.75
+    },
+    "type": "hospital",
+    "name": "Hospital"
+  },
+  {
+    "latlng": {
+      "lat": 1140.0986390705589,
+      "lng": 1303.375
+    },
+    "type": "police",
+    "name": "Police Building"
+  },
+  {
+    "latlng": {
+      "lat": 1120.5327263926213,
+      "lng": 1343.25
+    },
+    "type": "tower",
+    "name": "Tower (1)"
+  },
+  {
+    "latlng": {
+      "lat": 1134.7786266027765,
+      "lng": 1342.75
+    },
+    "type": "tower",
+    "name": "Apartments"
+  },
+  {
+    "latlng": {
+      "lat": 1134.528698528914,
+      "lng": 1359.5
+    },
+    "type": "tower",
+    "name": "Apartments"
+  },
+  {
+    "latlng": {
+      "lat": 1149.0245268129315,
+      "lng": 1342.5
+    },
+    "type": "tower",
+    "name": "Apartments"
+  },
+  {
+    "latlng": {
+      "lat": 1148.524670665207,
+      "lng": 1359.5
+    },
+    "type": "tower",
+    "name": "Apartments"
+  },
+  {
+    "latlng": {
+      "lat": 1157.2721532503897,
+      "lng": 1346.75
+    },
+    "type": "tower",
+    "name": "Tower (1)"
+  },
+  {
+    "latlng": {
+      "lat": 1157.5220813242522,
+      "lng": 1363
+    },
+    "type": "tower",
+    "name": "Tower (15)"
+  },
+  {
+    "latlng": {
+      "lat": 1119.5330140971719,
+      "lng": 1360.75
+    },
+    "type": "tower",
+    "name": "Tower (15)"
+  },
+  {
+    "latlng": {
+      "lat": 1118.28337372786,
+      "lng": 1380.75
+    },
+    "type": "tower",
+    "name": "Tower (4)"
+  },
+  {
+    "latlng": {
+      "lat": 1156.5223690288026,
+      "lng": 1381.25
+    },
+    "type": "tower",
+    "name": "Tower (4)"
+  },
+  {
+    "latlng": {
+      "lat": 1147.275030295895,
+      "lng": 1398.75
+    },
+    "type": "hospital",
+    "name": "Hospital"
+  },
+  {
+    "latlng": {
+      "lat": 1129.780065125529,
+      "lng": 1392.75
+    },
+    "type": "tower",
+    "name": "Tower (7)"
+  },
+  {
+    "latlng": {
+      "lat": 1142.7763249663722,
+      "lng": 1472
+    },
+    "type": "tower",
+    "name": "Tower (9)"
+  },
+  {
+    "latlng": {
+      "lat": 1070.5239514038306,
+      "lng": 1353.5
+    },
+    "type": "tower",
+    "name": "Tower (1)"
+  },
+  {
+    "latlng": {
+      "lat": 1044.531431722144,
+      "lng": 1437.5
+    },
+    "type": "infrastructure",
+    "name": "FootBall Stadium"
   }
 ]
