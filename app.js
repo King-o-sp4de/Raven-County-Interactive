@@ -25,6 +25,11 @@ const users = [
 /* ================= MAP INIT ================= */
 
 function initMap() {
+
+  // Hide export buttons by default
+document.getElementById("exportMarkersBtn").style.display = "none";
+document.getElementById("exportTownsBtn").style.display = "none";
+  
   map = L.map('map', {
     crs: L.CRS.Simple,
     minZoom: -2,
@@ -352,4 +357,5 @@ function toggleTheme() {
 /* ================= LOAD ================= */
 
 window.onload = initMap;
+
 
