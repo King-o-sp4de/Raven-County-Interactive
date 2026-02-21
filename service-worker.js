@@ -1,18 +1,24 @@
-self.addEventListener("install", e=>{
+const CACHE_NAME = "ravencounty-v1";
+
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./style.css",
+  "./app.js",
+  "./manifest.json",
+  "./assets/ravencounty.png",
+  "./assets/icon-192.png",
+  "./assets/icon-512.png"
+];
+
+self.addEventListener("install", e => {
   e.waitUntil(
-    caches.open("ravencounty-v1").then(cache=>{
-      return cache.addAll([
-        "index.html",
-        "style.css",
-        "app.js",
-        "assets/ravencounty.png"
-      ]);
-    })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
   );
 });
 
-
-
-
-
-
+self.addEventListener("fetch", e => {
+  e.respondWith(
+    caches.match(e.request).then(response => response || fetch(e.request))
+  );
+});
