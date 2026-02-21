@@ -343,5 +343,68 @@ function logout(){
 
 /* ================= START ================= */
 
+function editMarker(name, type, lat, lng){
+
+  const newName = prompt("New name:", name);
+  if(!newName) return;
+
+  const newType = prompt("New type:", type);
+  if(!newType) return;
+
+  deleteMarker(name, lat, lng);
+
+  createMarkerOnMap({lat:lat, lng:lng}, newType.toLowerCase(), newName, true);
+}
+
+function deleteMarker(name, lat, lng){
+
+  map.eachLayer(layer => {
+    if(layer instanceof L.CircleMarker){
+      const ll = layer.getLatLng();
+      if(ll.lat === lat && ll.lng === lng){
+        map.removeLayer(layer);
+      }
+    }
+  });
+
+  publicMarkers = publicMarkers.filter(m =>
+    !(m.latlng.lat === lat && m.latlng.lng === lng)
+  );
+
+  privateMarkers = privateMarkers.filter(m =>
+    !(m.latlng.lat === lat && m.latlng.lng === lng)
+  );
+
+  localStorage.setItem("privateMarkers", JSON.stringify(privateMarkers));
+}
+
+function goToCoords(){
+
+  const input = document.getElementById("coordInput").value.trim();
+  const parts = input.split(" ");
+
+  if(parts.length !== 2){
+    alert("Use format: X Z");
+    return;
+  }
+
+  const x = parseInt(parts[0]);
+  const z = parseInt(parts[1]);
+
+  if(isNaN(x) || isNaN(z)){
+    alert("Invalid numbers");
+    return;
+  }
+
+  const lat = ORIGIN - z;
+  const lng = x + ORIGIN;
+
+  map.setView([lat, lng], 2);
+
+  L.marker([lat, lng]).addTo(map)
+    .bindPopup(`X: ${x}<br>Z: ${z}`)
+    .openPopup();
+}
 
 window.onload = initMap;
+
