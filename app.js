@@ -161,14 +161,31 @@ function createMarkerOnMap(latlng, type, name, isNew){
 
   marker.bindPopup(`<b>${name}</b><br><i>${type}</i>`);
 
-  // Store data directly on marker
+  // Store metadata
   marker._markerData = {latlng, type, name};
+  marker._isPublic = (currentUser && (currentUser.role === "admin" || currentUser.role === "mod")) && isNew;
 
-  // RIGHT CLICK DELETE
+  /* ================= DELETE LOGIC ================= */
+
   marker.on("contextmenu", function(){
 
     if(!currentUser){
       alert("Login first.");
+      return;
+    }
+
+    const isAdmin = currentUser.role === "admin" || currentUser.role === "mod";
+
+    // Determine if this marker exists in public list
+    const existsInPublic = publicMarkers.some(m =>
+      m.name === name &&
+      m.latlng.lat === latlng.lat &&
+      m.latlng.lng === latlng.lng
+    );
+
+    // 🔒 BLOCK players from deleting public markers
+    if(existsInPublic && !isAdmin){
+      alert("Only Admins or Mods can delete public markers.");
       return;
     }
 
@@ -177,23 +194,27 @@ function createMarkerOnMap(latlng, type, name, isNew){
 
     map.removeLayer(marker);
 
-    // Remove from arrays
-    if(currentUser.role === "admin" || currentUser.role === "mod"){
+    if(existsInPublic){
+      // Admin deleting public marker
       publicMarkers = publicMarkers.filter(m =>
         !(m.name === name &&
           m.latlng.lat === latlng.lat &&
           m.latlng.lng === latlng.lng)
       );
     } else {
+      // Player deleting private marker
       privateMarkers = privateMarkers.filter(m =>
         !(m.name === name &&
           m.latlng.lat === latlng.lat &&
           m.latlng.lng === latlng.lng)
       );
+
       localStorage.setItem("privateMarkers", JSON.stringify(privateMarkers));
     }
 
   });
+
+  /* ================= SAVE IF NEW ================= */
 
   if(isNew){
     if(currentUser.role==="admin" || currentUser.role==="mod"){
@@ -304,5 +325,6 @@ function toggleTheme(){
   document.body.classList.toggle("light");
   document.body.classList.toggle("dark");
 }
+
 
 
