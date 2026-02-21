@@ -24,7 +24,7 @@ const users = [
 
 /* ================= MAP INIT ================= */
 
-function initMap(){
+async function initMap(){
 
   map = L.map('map',{
     crs:L.CRS.Simple,
@@ -38,10 +38,11 @@ function initMap(){
 
   map.on("mousemove", updateCoords);
   map.on("click", handleMapClick);
-  map.on("contextmenu", handleRightClick);
 
-  loadPublicMarkers();
-  loadPublicTowns();
+  // Wait for GitHub JSON to fully load
+  await loadPublicMarkers();
+  await loadPublicTowns();
+
   loadPrivateMarkers();
 }
 
@@ -230,12 +231,22 @@ function createMarkerOnMap(latlng, type, name, isNew){
 
 async function loadPublicMarkers(){
   try{
-    const res = await fetch("publicMarkers.json");
+    const res = await fetch("./publicMarkers.json", { cache: "no-store" });
+
+    if(!res.ok){
+      console.error("Failed to load publicMarkers.json");
+      return;
+    }
+
     publicMarkers = await res.json();
+
     publicMarkers.forEach(m=>{
       createMarkerOnMap(m.latlng,m.type,m.name,false);
     });
-  }catch{}
+
+  }catch(err){
+    console.error("Marker load error:", err);
+  }
 }
 
 function loadPrivateMarkers(){
@@ -246,12 +257,22 @@ function loadPrivateMarkers(){
 
 async function loadPublicTowns(){
   try{
-    const res = await fetch("publicTowns.json");
+    const res = await fetch("./publicTowns.json", { cache: "no-store" });
+
+    if(!res.ok){
+      console.error("Failed to load publicTowns.json");
+      return;
+    }
+
     publicTowns = await res.json();
+
     publicTowns.forEach(t=>{
       createTownLabel(t.latlng,t.name,false);
     });
-  }catch{}
+
+  }catch(err){
+    console.error("Town load error:", err);
+  }
 }
 
 /* ================= TOWNS ================= */
@@ -325,6 +346,7 @@ function toggleTheme(){
   document.body.classList.toggle("light");
   document.body.classList.toggle("dark");
 }
+
 
 
 
