@@ -26,15 +26,17 @@
 
 <div id="app">
 
-  <div id="topbar">
-    <button onclick="startMarkerPlacement()">📍 Add Marker</button>
-    <button onclick="startTownPlacement()">🏙 Add Town</button>
-    <button onclick="exportPublicMarkers()">⬇ Export Markers</button>
-    <button onclick="exportPublicTowns()">⬇ Export Towns</button>
-    <button onclick="toggleTheme()">🌗 Mode</button>
-    <button onclick="openLogin()">🔐 Login</button>
-    <span id="userDisplay"></span>
-  </div>
+<div id="topbar">
+  <button onclick="startMarkerPlacement()">📍 Add Marker</button>
+  <button onclick="startTownPlacement()">🏙 Add Town</button>
+
+  <button id="exportMarkersBtn" class="adminOnly" onclick="exportPublicMarkers()">⬇ Export Markers</button>
+  <button id="exportTownsBtn" class="adminOnly" onclick="exportPublicTowns()">⬇ Export Towns</button>
+
+  <button onclick="toggleTheme()">🌗 Mode</button>
+  <button onclick="openLogin()">🔐 Login</button>
+  <span id="userDisplay"></span>
+</div>
 
   <div id="map"></div>
 
@@ -72,3 +74,4 @@
 <script src="app.js"></script>
 </body>
 </html>
+
