@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>Raven County Interactive Map</title>
@@ -7,30 +7,41 @@
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 <link rel="stylesheet" href="style.css">
-
 </head>
-<body class="dark">
+<body>
 
 <div id="topbar">
+  <button onclick="startMarkerPlacement()">📍 Marker</button>
+  <button onclick="startTownPlacement()">🏘 Town</button>
+  <button onclick="exportPublicMarkers()">⬇ Export Markers</button>
+  <button onclick="exportPublicTowns()">⬇ Export Towns</button>
+  <button onclick="toggleGrid()">🟦 Grid</button>
+  <button onclick="centerMap()">🎯 Center</button>
 
-<button onclick="startMarkerPlacement()">📍 Add Marker</button>
-<button onclick="startTownPlacement()">🏙 Add Town</button>
-<button onclick="toggleGrid()">🟦 Grid</button>
-<button onclick="startMeasure()">📏 Measure</button>
-<button onclick="centerMap()">🎯 Center</button>
+  <input id="searchX" placeholder="X">
+  <input id="searchZ" placeholder="Z">
+  <button onclick="searchCoords()">🔎 Go</button>
 
-<input id="searchX" placeholder="X">
-<input id="searchZ" placeholder="Z">
-<button onclick="searchCoords()">🔎 Go</button>
+  <button onclick="openLogin()">🔐 Login</button>
+  <button onclick="logout()">Logout</button>
 
-<button onclick="exportPublicMarkers()">⬇ Export Markers</button>
-<button onclick="exportPublicTowns()">⬇ Export Towns</button>
-
+  <span id="userDisplay"></span>
 </div>
 
 <div id="map"></div>
 
-<div id="coordsBox" class="panel"></div>
+<div id="coordsBox"></div>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="modal hidden">
+  <div class="modal-content">
+    <h3>Login</h3>
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button onclick="closeLogin()">Cancel</button>
+  </div>
+</div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="app.js"></script>
