@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "latlng": {
+      "lat": 2256.173773548512,
+      "lng": 1344
+    },
+    "name": "Lobaurt"
+  },
+  {
+    "latlng": {
+      "lat": 738.533404236658,
+      "lng": 1084
+    },
+    "name": "Lorthon"
+  },
+  {
+    "latlng": {
+      "lat": 1582.2905815960219,
+      "lng": 2410
+    },
+    "name": "West Wrock"
+  },
+  {
+    "latlng": {
+      "lat": 82.25893409546507,
+      "lng": 828
+    },
+    "name": "Xorian"
+  },
+  {
+    "latlng": {
+      "lat": 2676.5388401143196,
+      "lng": 149.5
+    },
+    "name": "Sworkite (Airfield)"
+  },
+  {
+    "latlng": {
+      "lat": 76.67553028461316,
+      "lng": 2828
+    },
+    "name": "SafeZone"
+  }
+]
