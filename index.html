@@ -1,106 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Raven County Map</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Raven County Interactive Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
-<style>
-html, body { margin:0; height:100%; font-family:Arial; }
-body.dark { background:#111; color:white; }
-body.light { background:#f4f4f4; color:black; }
-
-#map { height:100vh; width:100%; }
-
-#topbar {
-  position:absolute;
-  top:10px;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(0,0,0,0.75);
-  padding:8px;
-  border-radius:8px;
-  z-index:1000;
-}
-
-#topbar button, #topbar input {
-  margin:2px;
-}
-
-.panel {
-  position:absolute;
-  background:rgba(0,0,0,0.75);
-  padding:10px;
-  border-radius:8px;
-  z-index:1000;
-  color:white;
-}
-
-#legend { bottom:20px; left:20px; }
-#coordsBox { bottom:20px; right:20px; }
-
-.modal {
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background:rgba(0,0,0,0.6);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:2000;
-}
-
-.hidden { display:none; }
-
-.modal-content {
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  width:300px;
-}
-.modal-content input {
-  width:100%;
-  margin-bottom:10px;
-  padding:6px;
-}
-</style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="dark">
 
-<div id="topbar">
-  <button onclick="startMarkerPlacement()">📍 Add</button>
-  <button onclick="toggleTheme()">🌗 Theme</button>
-  <button onclick="toggleGrid()">🟦 Grid</button>
-  <button onclick="startMeasure()">📏 Measure</button>
-  <button onclick="centerMap()">🎯 0,0</button>
-  <button onclick="exportPublicMarkers()">💾 Export</button>
+<div id="app">
 
-  <input id="searchX" placeholder="X" style="width:60px;">
-  <input id="searchZ" placeholder="Z" style="width:60px;">
-  <button onclick="goToCoords()">🔎 Go</button>
+  <div id="topbar">
+    <button onclick="startMarkerPlacement()">📍 Add Marker</button>
+    <button onclick="startTownPlacement()">🏙 Add Town</button>
+    <button onclick="toggleGrid()">🟦 Grid</button>
+    <button onclick="centerMap()">🎯 Center 0,0</button>
+    <button onclick="exportPublicMarkers()">⬇ Export Public</button>
 
-  <button onclick="openLogin()">🔐 Login</button>
-  <button onclick="logout()">Logout</button>
-  <span id="userDisplay"></span>
+    <input id="coordSearch" placeholder="X Z">
+    <button onclick="searchCoords()">🔎 Go</button>
+
+    <button onclick="openLogin()">🔐 Login</button>
+    <button onclick="logout()">Logout</button>
+
+    <span id="userDisplay"></span>
+  </div>
+
+  <div id="map"></div>
+
+  <div id="legend" class="panel">
+    <b>Legend</b><br>
+    🔴 House<br>
+    🟠 Trader<br>
+    🟡 Tower<br>
+    🟢 Tent<br>
+    🔵 Safezone<br>
+    🟣 Infrastructure
+  </div>
+
+  <div id="coordsBox" class="panel">X: 0 | Z: 0</div>
+
 </div>
 
-<div id="map"></div>
-
-<div id="legend" class="panel">
-<b>Legend</b><br>
-🔴 House<br>
-🟠 Trader<br>
-🟡 Tower<br>
-🟢 Tent<br>
-🔵 Safezone<br>
-🟣 Infrastructure
-</div>
-
-<div id="coordsBox" class="panel"></div>
-
+<!-- LOGIN MODAL -->
 <div id="loginModal" class="modal hidden">
   <div class="modal-content">
     <h3>Login</h3>
@@ -113,5 +60,6 @@ body.light { background:#f4f4f4; color:black; }
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="app.js"></script>
+
 </body>
 </html>
