@@ -1,7 +1,7 @@
 /* ================= SETTINGS ================= */
 
 const MAP_SIZE = 2944;
-const ORIGIN = 1472;
+const ORIGIN = 1408;
 
 let currentUser = null;
 let map;
@@ -407,4 +407,5 @@ function goToCoords(){
 }
 
 window.onload = initMap;
+
 
