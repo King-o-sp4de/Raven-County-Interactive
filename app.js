@@ -181,6 +181,40 @@ function createMarkerOnMap(latlng, type, name, isNew){
 
   marker.bindPopup(`<b>${name}</b><br><i>${type}</i>`);
 
+  // Store data directly on marker
+  marker._markerData = {latlng, type, name};
+
+  // RIGHT CLICK DELETE
+  marker.on("contextmenu", function(){
+
+    if(!currentUser){
+      alert("Login first.");
+      return;
+    }
+
+    const confirmDelete = confirm(`Delete marker "${name}"?`);
+    if(!confirmDelete) return;
+
+    map.removeLayer(marker);
+
+    // Remove from arrays
+    if(currentUser.role === "admin" || currentUser.role === "mod"){
+      publicMarkers = publicMarkers.filter(m =>
+        !(m.name === name &&
+          m.latlng.lat === latlng.lat &&
+          m.latlng.lng === latlng.lng)
+      );
+    } else {
+      privateMarkers = privateMarkers.filter(m =>
+        !(m.name === name &&
+          m.latlng.lat === latlng.lat &&
+          m.latlng.lng === latlng.lng)
+      );
+      localStorage.setItem("privateMarkers", JSON.stringify(privateMarkers));
+    }
+
+  });
+
   if(isNew){
     if(currentUser.role==="admin" || currentUser.role==="mod"){
       publicMarkers.push({latlng,type,name});
@@ -290,3 +324,4 @@ function toggleTheme(){
   document.body.classList.toggle("light");
   document.body.classList.toggle("dark");
 }
+
