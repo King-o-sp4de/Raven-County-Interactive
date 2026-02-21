@@ -1,1 +1,114 @@
-[]
+[
+  {
+    "latlng": {
+      "lat": 2557.374568443174,
+      "lng": 81.875
+    },
+    "type": "tent",
+    "name": "Military Tent"
+  },
+  {
+    "latlng": {
+      "lat": 2556.9996763323807,
+      "lng": 69.75
+    },
+    "type": "tent",
+    "name": "Military Quanza Hut"
+  },
+  {
+    "latlng": {
+      "lat": 2556.499820184656,
+      "lng": 54.125
+    },
+    "type": "tent",
+    "name": "Military Tent"
+  },
+  {
+    "latlng": {
+      "lat": 2568.4963677300498,
+      "lng": 78.625
+    },
+    "type": "tent",
+    "name": "Cover Tent (Military)"
+  },
+  {
+    "latlng": {
+      "lat": 2681.376402559684,
+      "lng": 75.75
+    },
+    "type": "tent",
+    "name": "Military Quanza Hut"
+  },
+  {
+    "latlng": {
+      "lat": 2713.117267940205,
+      "lng": 151.625
+    },
+    "type": "tent",
+    "name": "Military Quanza Hut"
+  },
+  {
+    "latlng": {
+      "lat": 2713.117267940205,
+      "lng": 177
+    },
+    "type": "tent",
+    "name": "Military Quanza Hut"
+  },
+  {
+    "latlng": {
+      "lat": 2703.9948932442285,
+      "lng": 231.125
+    },
+    "type": "tent",
+    "name": "Military Quanza Hut"
+  },
+  {
+    "latlng": {
+      "lat": 2749.017478051444,
+      "lng": 271.25
+    },
+    "type": "tower",
+    "name": "Cell Tower"
+  },
+  {
+    "latlng": {
+      "lat": 2750.2671184207557,
+      "lng": 292.25
+    },
+    "type": "tower",
+    "name": "Radio Tower"
+  },
+  {
+    "latlng": {
+      "lat": 2349.511652034296,
+      "lng": 1294
+    },
+    "type": "house",
+    "name": "Farm House"
+  },
+  {
+    "latlng": {
+      "lat": 2423.4903618975577,
+      "lng": 1359
+    },
+    "type": "house",
+    "name": "Police Station"
+  },
+  {
+    "latlng": {
+      "lat": 2418.991656568035,
+      "lng": 1347.5
+    },
+    "type": "infrastructure",
+    "name": "Extraction Point"
+  },
+  {
+    "latlng": {
+      "lat": 2344.878524380744,
+      "lng": 1340.625
+    },
+    "type": "tower",
+    "name": "Tower (1)"
+  }
+]
