@@ -65,20 +65,37 @@ function centerMap() {
 /* ================= SEARCH ================= */
 
 function searchCoords() {
-  const input = document.getElementById("coordSearch").value;
-  const parts = input.split(",");
+  // Get values from the X and Z input fields
+  const xInput = document.getElementById("searchX").value;
+  const zInput = document.getElementById("searchZ").value;
 
-  if(parts.length !== 2) return alert("Format: X,Z");
+  // Convert to numbers
+  const x = parseInt(xInput.trim());
+  const z = parseInt(zInput.trim());
 
-  const x = parseInt(parts[0].trim()) - OFFSET_X;
-  const z = parseInt(parts[1].trim()) - OFFSET_Z;
+  // Validate inputs
+  if (isNaN(x) || isNaN(z)) {
+    return alert("Please enter valid numbers for X and Z.");
+  }
 
-  const lat = ORIGIN - z;
-  const lng = x + ORIGIN;
+  // Apply offsets to convert to map coordinates
+  const lat = ORIGIN - (z - OFFSET_Z);
+  const lng = (x - OFFSET_X) + ORIGIN;
 
+  // Center the map on these coordinates
   map.setView([lat, lng], 2);
-}
 
+  // Optional: briefly highlight the searched point
+  const searchMarker = L.circleMarker([lat, lng], {
+    radius: 10,
+    color: "magenta",
+    fillColor: "magenta",
+    fillOpacity: 0.7
+  }).addTo(map);
+
+  // Remove the temporary marker after 3 seconds
+  setTimeout(() => map.removeLayer(searchMarker), 120000);
+}
 /* ================= GRID ================= */
 
 function toggleGrid() {
@@ -335,3 +352,4 @@ function toggleTheme() {
 /* ================= LOAD ================= */
 
 window.onload = initMap;
+
