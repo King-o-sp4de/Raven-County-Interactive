@@ -1,9 +1,9 @@
 {
   "name": "Raven County Map",
-  "short_name": "MineZMap",
+  "short_name": "MineZ Map",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#111111",
+  "background_color": transparent;
   "theme_color": "#111111",
   "icons": [
     {
@@ -18,3 +18,4 @@
     }
   ]
 }
+
