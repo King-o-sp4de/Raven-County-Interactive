@@ -47,26 +47,6 @@ function initMap(){
 
 document.addEventListener("DOMContentLoaded", initMap);
 
-/* ================= RIGHT CLICK ================= */
-
-function handleRightClick(e){
-  if(!currentUser){
-    alert("Login first.");
-    return;
-  }
-
-  const confirmDelete = confirm("Delete nearby marker?");
-  if(!confirmDelete) return;
-
-  map.eachLayer(layer=>{
-    if(layer instanceof L.CircleMarker){
-      if(layer.getLatLng().distanceTo(e.latlng) < 15){
-        map.removeLayer(layer);
-      }
-    }
-  });
-}
-
 /* ================= COORDS ================= */
 
 function updateCoords(e){
@@ -324,4 +304,5 @@ function toggleTheme(){
   document.body.classList.toggle("light");
   document.body.classList.toggle("dark");
 }
+
 
