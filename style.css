@@ -135,7 +135,7 @@ body.light {
 ======================= */
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .modal {
@@ -226,3 +226,4 @@ body.light .town-label {
   background: rgba(255,255,255,0.85);
   color: black;
 }
+
