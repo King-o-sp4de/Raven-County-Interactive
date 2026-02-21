@@ -7,8 +7,8 @@ const MAP_SIZE = 2944;
 const ORIGIN = 1472;
 
 // CENTER CORRECTION
-const OFFSET_X = 64;
-const OFFSET_Z = 65;
+const OFFSET_X = -64;
+const OFFSET_Z = -65;
 
 let currentUser = null;
 let map;
@@ -269,3 +269,4 @@ function handleRightClick(e){
 ================================ */
 
 initMap();
+
