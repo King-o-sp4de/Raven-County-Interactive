@@ -13,6 +13,9 @@ let gridLayer = null;
 let measurePoints = [];
 let placingMarker = false;
 
+let placingTown = false;
+let publicTowns = [];
+
 let publicMarkers = [];
 let privateMarkers = JSON.parse(localStorage.getItem("privateMarkers") || "[]");
 
@@ -104,6 +107,15 @@ function startMeasure(){
 
 function handleMapClick(e){
 
+  if(placingTown){
+  placingTown = false;
+  const name = prompt("Enter town name:");
+  if(name){
+    createTownLabel(e.latlng, name);
+  }
+  return;
+}
+  
   if(placingMarker){
     placingMarker = false;
     promptMarkerDetails(e.latlng);
@@ -149,6 +161,22 @@ function startMarkerPlacement(){
   alert("Click on map to place marker.");
 }
 
+function startTownPlacement(){
+
+  if(!currentUser){
+    alert("Login first.");
+    return;
+  }
+
+  if(currentUser.role !== "admin" && currentUser.role !== "mod"){
+    alert("Only admin/mod can add towns.");
+    return;
+  }
+
+  placingTown = true;
+  alert("Click on the map to place town label.");
+}
+
 function promptMarkerDetails(latlng){
 
   const type = prompt("Type: house, trader, tower, tent, safezone, infrastructure, town");
@@ -158,6 +186,19 @@ function promptMarkerDetails(latlng){
   if(!name) return;
 
   createMarker(latlng, type.toLowerCase(), name, true);
+}
+
+function createTownLabel(latlng, name){
+
+  const townLabel = L.marker(latlng, {
+    icon: L.divIcon({
+      className: "town-label",
+      html: name,
+      iconSize: [100, 20]
+    })
+  }).addTo(map);
+
+  publicTowns.push({latlng, name});
 }
 
 function createMarker(latlng, type, name, isNew){
@@ -326,3 +367,4 @@ function logout(){
 }
 
 window.onload = initMap;
+
