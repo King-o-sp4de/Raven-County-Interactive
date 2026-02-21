@@ -3,7 +3,6 @@
 const MAP_SIZE = 2944;
 const ORIGIN = 1472;
 
-// Coordinate offsets (center fix)
 const OFFSET_X = 64;
 const OFFSET_Z = 65;
 
@@ -46,7 +45,27 @@ function initMap(){
   loadPrivateMarkers();
 }
 
-window.onload = initMap;
+document.addEventListener("DOMContentLoaded", initMap);
+
+/* ================= RIGHT CLICK ================= */
+
+function handleRightClick(e){
+  if(!currentUser){
+    alert("Login first.");
+    return;
+  }
+
+  const confirmDelete = confirm("Delete nearby marker?");
+  if(!confirmDelete) return;
+
+  map.eachLayer(layer=>{
+    if(layer instanceof L.CircleMarker){
+      if(layer.getLatLng().distanceTo(e.latlng) < 15){
+        map.removeLayer(layer);
+      }
+    }
+  });
+}
 
 /* ================= COORDS ================= */
 
@@ -65,7 +84,6 @@ function centerMap(){
 /* ================= SEARCH ================= */
 
 function goToCoords(){
-
   const x = parseInt(document.getElementById("searchX").value);
   const z = parseInt(document.getElementById("searchZ").value);
 
@@ -74,8 +92,8 @@ function goToCoords(){
     return;
   }
 
-  const lat = ORIGIN - (z - 65);
-  const lng = (x - 64) + ORIGIN;
+  const lat = ORIGIN - (z - OFFSET_Z);
+  const lng = (x - OFFSET_X) + ORIGIN;
 
   map.setView([lat, lng], 2);
 }
@@ -115,7 +133,6 @@ function startMarkerPlacement(){
 }
 
 function handleMapClick(e){
-
   if(placingMarker){
     placingMarker = false;
     promptMarkerDetails(e.latlng);
@@ -174,11 +191,12 @@ function createMarkerOnMap(latlng, type, name, isNew){
   }
 }
 
+/* ================= LOAD DATA ================= */
+
 async function loadPublicMarkers(){
   try{
     const res = await fetch("publicMarkers.json");
     publicMarkers = await res.json();
-
     publicMarkers.forEach(m=>{
       createMarkerOnMap(m.latlng,m.type,m.name,false);
     });
@@ -189,6 +207,16 @@ function loadPrivateMarkers(){
   privateMarkers.forEach(m=>{
     createMarkerOnMap(m.latlng,m.type,m.name,false);
   });
+}
+
+async function loadPublicTowns(){
+  try{
+    const res = await fetch("publicTowns.json");
+    publicTowns = await res.json();
+    publicTowns.forEach(t=>{
+      createTownLabel(t.latlng,t.name,false);
+    });
+  }catch{}
 }
 
 /* ================= TOWNS ================= */
@@ -205,13 +233,11 @@ function startTownPlacement(){
 function promptTownDetails(latlng){
   const name = prompt("Town name:");
   if(!name) return;
-
   createTownLabel(latlng,name,true);
 }
 
 function createTownLabel(latlng,name,isNew){
-
-  const label = L.marker(latlng,{
+  L.marker(latlng,{
     icon: L.divIcon({
       className:"town-label",
       html:`<div>${name}</div>`
@@ -223,49 +249,6 @@ function createTownLabel(latlng,name,isNew){
       publicTowns.push({latlng,name});
     }
   }
-}
-
-async function loadPublicTowns(){
-  try{
-    const res = await fetch("publicTowns.json");
-    publicTowns = await res.json();
-
-    publicTowns.forEach(t=>{
-      createTownLabel(t.latlng,t.name,false);
-    });
-  }catch{}
-}
-
-/* ================= EXPORT ================= */
-
-function exportPublicMarkers(){
-  if(!currentUser || (currentUser.role!=="admin" && currentUser.role!=="mod")){
-    alert("Admins or Mods only.");
-    return;
-  }
-
-  const dataStr = "data:text/json;charset=utf-8," +
-    encodeURIComponent(JSON.stringify(publicMarkers,null,2));
-
-  const dl = document.createElement("a");
-  dl.href = dataStr;
-  dl.download = "publicMarkers.json";
-  dl.click();
-}
-
-function exportPublicTowns(){
-  if(!currentUser || (currentUser.role!=="admin" && currentUser.role!=="mod")){
-    alert("Admins or Mods only.");
-    return;
-  }
-
-  const dataStr = "data:text/json;charset=utf-8," +
-    encodeURIComponent(JSON.stringify(publicTowns,null,2));
-
-  const dl = document.createElement("a");
-  dl.href = dataStr;
-  dl.download = "publicTowns.json";
-  dl.click();
 }
 
 /* ================= LOGIN ================= */
@@ -287,8 +270,6 @@ function login(){
 
   if(found){
     currentUser = found;
-
-    // Show admin tools
     document.getElementById("exportMarkersBtn").style.display="inline-block";
     document.getElementById("exportTownsBtn").style.display="inline-block";
   } else {
@@ -305,10 +286,7 @@ function logout(){
   location.reload();
 }
 
-/* ================= THEME ================= */
-
 function toggleTheme(){
   document.body.classList.toggle("light");
   document.body.classList.toggle("dark");
 }
-
