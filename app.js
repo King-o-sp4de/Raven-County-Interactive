@@ -1,24 +1,19 @@
-/* ================================
-   RAVEN COUNTY INTERACTIVE MAP
-   Clean Build – X+64 Z+65 Center
-================================ */
+/* ================= SETTINGS ================= */
 
 const MAP_SIZE = 2944;
 const ORIGIN = 1472;
 
-// CENTER CORRECTION
-const OFFSET_X = -64;
-const OFFSET_Z = -65;
+// CENTER FIX
+const OFFSET_X = 64;
+const OFFSET_Z = 65;
 
 let currentUser = null;
 let map;
 let gridLayer = null;
 let measurePoints = [];
 let placingMarker = false;
-let placingTown = false;
 
 let publicMarkers = [];
-let townLabels = [];
 let privateMarkers = JSON.parse(localStorage.getItem("privateMarkers") || "[]");
 
 const users = [
@@ -26,11 +21,10 @@ const users = [
   {username:"Xzyus",password:"HitByAAda4x4",role:"mod"}
 ];
 
-/* ================================
-   MAP INIT
-================================ */
+/* ================= MAP INIT ================= */
 
 function initMap(){
+
   map = L.map('map',{
     crs:L.CRS.Simple,
     minZoom:-2,
@@ -46,92 +40,47 @@ function initMap(){
   map.on("contextmenu", handleRightClick);
 
   loadPublicMarkers();
-  loadTownLabels();
+  loadPrivateMarkers();
 }
 
-/* ================================
-   COORD CONVERSION
-================================ */
-
-function convertToMapCoords(x, z){
-  return [
-    ORIGIN - (z + OFFSET_Z),
-    (x + OFFSET_X) + ORIGIN
-  ];
-}
-
-function convertToGameCoords(latlng){
-  return {
-    x: Math.round(latlng.lng - ORIGIN - OFFSET_X),
-    z: Math.round(ORIGIN - latlng.lat - OFFSET_Z)
-  };
-}
+/* ================= COORDS ================= */
 
 function updateCoords(e){
-  const coords = convertToGameCoords(e.latlng);
-  coordsBox.innerHTML = `X: ${coords.x} | Z: ${coords.z}`;
+  const x = Math.round(e.latlng.lng - ORIGIN + OFFSET_X);
+  const z = Math.round(ORIGIN - e.latlng.lat + OFFSET_Z);
+
+  document.getElementById("coordsBox").innerHTML = `X: ${x} | Z: ${z}`;
 }
 
-/* ================================
-   SEARCH BAR
-================================ */
+function centerMap(){
+  map.setView([ORIGIN, ORIGIN], 0);
+}
+
+/* ================= SEARCH ================= */
 
 function searchCoords(){
-  const input = document.getElementById("coordSearch").value.trim();
-  const parts = input.split(" ");
 
-  if(parts.length !== 2){
-    alert("Enter X Z");
+  const x = parseInt(document.getElementById("searchX").value);
+  const z = parseInt(document.getElementById("searchZ").value);
+
+  if(isNaN(x) || isNaN(z)){
+    alert("Enter valid coordinates.");
     return;
   }
 
-  const x = parseInt(parts[0]);
-  const z = parseInt(parts[1]);
+  const lat = ORIGIN - (z - OFFSET_Z);
+  const lng = ORIGIN + (x - OFFSET_X);
 
-  map.setView(convertToMapCoords(x,z), 1);
+  map.setView([lat,lng],2);
 }
 
-/* ================================
-   LOGIN
-================================ */
-
-function login(){
-  const u = username.value;
-  const p = password.value;
-
-  const found = users.find(x=>x.username===u && x.password===p);
-
-  if(found){
-    currentUser = found;
-    userDisplay.innerHTML = `Logged in as ${found.username} (${found.role})`;
-  } else {
-    alert("Invalid login");
-    return;
-  }
-
-  loginModal.classList.add("hidden");
-}
-
-function logout(){
-  location.reload();
-}
-
-function openLogin(){
-  loginModal.classList.remove("hidden");
-}
-
-function closeLogin(){
-  loginModal.classList.add("hidden");
-}
-
-/* ================================
-   GRID / CENTER
-================================ */
+/* ================= GRID ================= */
 
 function toggleGrid(){
+
   if(gridLayer){
     map.removeLayer(gridLayer);
-    gridLayer=null;
+    gridLayer = null;
     return;
   }
 
@@ -146,127 +95,234 @@ function toggleGrid(){
   gridLayer.addTo(map);
 }
 
-function centerMap(){
-  map.setView(convertToMapCoords(0,0),0);
+/* ================= MEASURE ================= */
+
+function startMeasure(){
+  measurePoints = [];
+  alert("Click two points to measure distance.");
 }
-
-/* ================================
-   PUBLIC MARKERS
-================================ */
-
-function loadPublicMarkers(){
-  fetch("publicMarkers.json")
-    .then(res=>res.json())
-    .then(data=>{
-      publicMarkers = data;
-
-      publicMarkers.forEach(m=>{
-        L.marker(convertToMapCoords(m.x,m.z))
-          .addTo(map)
-          .bindPopup(`<b>${m.name}</b><br>${m.type}`);
-      });
-    })
-    .catch(()=>console.log("No publicMarkers.json found"));
-}
-
-function exportPublicMarkers(){
-  if(!currentUser || currentUser.role!=="admin"){
-    alert("Admins only");
-    return;
-  }
-
-  const blob = new Blob(
-    [JSON.stringify(publicMarkers,null,2)],
-    {type:"application/json"}
-  );
-
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download="publicMarkers.json";
-  a.click();
-}
-
-/* ================================
-   TOWN LABELS
-================================ */
-
-function startTownPlacement(){
-  if(!currentUser || currentUser.role!=="admin"){
-    alert("Admins only");
-    return;
-  }
-
-  placingTown = true;
-  alert("Click map to place town label");
-}
-
-function loadTownLabels(){
-  const saved = JSON.parse(localStorage.getItem("townLabels") || "[]");
-  townLabels = saved;
-
-  townLabels.forEach(t=>{
-    L.marker(convertToMapCoords(t.x,t.z),{
-      icon:L.divIcon({
-        className:"town-label",
-        html:t.name
-      })
-    }).addTo(map);
-  });
-}
-
-function saveTownLabels(){
-  localStorage.setItem("townLabels", JSON.stringify(townLabels));
-}
-
-/* ================================
-   CLICK HANDLING
-================================ */
 
 function handleMapClick(e){
 
-  if(placingTown){
-    placingTown=false;
-
-    const coords = convertToGameCoords(e.latlng);
-    const name = prompt("Town name?");
-    if(!name) return;
-
-    L.marker(e.latlng,{
-      icon:L.divIcon({
-        className:"town-label",
-        html:name
-      })
-    }).addTo(map);
-
-    townLabels.push({x:coords.x,z:coords.z,name:name});
-    saveTownLabels();
+  if(placingMarker){
+    placingMarker = false;
+    promptMarkerDetails(e.latlng);
     return;
   }
 
-  if(placingMarker){
-    placingMarker=false;
+  if(measurePoints.length === 1){
+    measurePoints.push(e.latlng);
 
-    const coords = convertToGameCoords(e.latlng);
-    const name = prompt("Marker name?");
-    const type = prompt("Type?");
+    const a = measurePoints[0];
+    const b = measurePoints[1];
 
-    if(!name || !type) return;
+    const dx = Math.round((b.lng - a.lng));
+    const dz = Math.round((a.lat - b.lat));
+    const dist = Math.sqrt(dx*dx + dz*dz).toFixed(2);
 
-    publicMarkers.push({x:coords.x,z:coords.z,name,type});
-
-    L.marker(e.latlng)
-      .addTo(map)
-      .bindPopup(`<b>${name}</b><br>${type}`);
+    alert(`Distance: ${dist} blocks\nΔX: ${dx}\nΔZ: ${dz}`);
+    measurePoints = [];
+  }
+  else if(measurePoints.length === 0){
+    measurePoints.push(e.latlng);
   }
 }
 
+/* ================= RIGHT CLICK BLOCK ================= */
+
 function handleRightClick(e){
-  alert("Right click disabled for now");
+  const x = Math.round(e.latlng.lng - ORIGIN + OFFSET_X);
+  const z = Math.round(ORIGIN - e.latlng.lat + OFFSET_Z);
+  alert(`Block Location:\nX: ${x}\nZ: ${z}`);
 }
 
-/* ================================
-   START MAP
-================================ */
+/* ================= MARKERS ================= */
 
-initMap();
+function startMarkerPlacement(){
 
+  if(!currentUser){
+    alert("Login first.");
+    return;
+  }
+
+  placingMarker = true;
+  alert("Click on map to place marker.");
+}
+
+function promptMarkerDetails(latlng){
+
+  const type = prompt("Type: house, trader, tower, tent, safezone, infrastructure, town");
+  if(!type) return;
+
+  const name = prompt("Enter marker name:");
+  if(!name) return;
+
+  createMarker(latlng, type.toLowerCase(), name, true);
+}
+
+function createMarker(latlng, type, name, isNew){
+
+  const colors = {
+    house:"red",
+    trader:"orange",
+    tower:"yellow",
+    tent:"green",
+    safezone:"blue",
+    infrastructure:"purple",
+    town:"white"
+  };
+
+  if(!colors[type]){
+    alert("Invalid type.");
+    return;
+  }
+
+  let marker;
+
+  if(type === "town"){
+    marker = L.marker(latlng,{
+      icon: L.divIcon({
+        className: "town-label",
+        html: `<div class="townText">${name}</div>`
+      })
+    }).addTo(map);
+  } else {
+    marker = L.circleMarker(latlng,{
+      radius:8,
+      color:colors[type],
+      fillColor:colors[type],
+      fillOpacity:1
+    }).addTo(map);
+  }
+
+  marker.customData = {latlng,type,name};
+
+  marker.on("click",function(){
+
+    const action = prompt("Type 'edit' or 'delete'");
+
+    if(action === "delete"){
+      map.removeLayer(marker);
+
+      if(currentUser.role === "admin"){
+        publicMarkers = publicMarkers.filter(m=>m.name !== name);
+      } else {
+        privateMarkers = privateMarkers.filter(m=>m.name !== name);
+        localStorage.setItem("privateMarkers", JSON.stringify(privateMarkers));
+      }
+    }
+
+    if(action === "edit"){
+      const newName = prompt("New name:", name);
+      if(!newName) return;
+
+      marker.customData.name = newName;
+
+      if(type === "town"){
+        marker.setIcon(L.divIcon({
+          className:"town-label",
+          html:`<div class="townText">${newName}</div>`
+        }));
+      } else {
+        marker.bindPopup(`<b>${newName}</b><br><i>${type}</i>`);
+      }
+    }
+
+  });
+
+  if(type !== "town"){
+    marker.bindPopup(`<b>${name}</b><br><i>${type}</i>`);
+  }
+
+  if(isNew){
+    if(currentUser.role === "admin" || currentUser.role === "mod"){
+      publicMarkers.push({latlng,type,name});
+      alert("Public marker added. Export JSON to update server.");
+    } else {
+      privateMarkers.push({latlng,type,name});
+      localStorage.setItem("privateMarkers", JSON.stringify(privateMarkers));
+    }
+  }
+}
+
+/* ================= LOAD MARKERS ================= */
+
+async function loadPublicMarkers(){
+  try{
+    const res = await fetch("publicMarkers.json");
+    publicMarkers = await res.json();
+
+    publicMarkers.forEach(m=>{
+      createMarker(m.latlng,m.type,m.name,false);
+    });
+
+  }catch(err){
+    console.log("No public markers yet.");
+  }
+}
+
+function loadPrivateMarkers(){
+  privateMarkers.forEach(m=>{
+    createMarker(m.latlng,m.type,m.name,false);
+  });
+}
+
+/* ================= EXPORT ================= */
+
+function exportPublicMarkers(){
+
+  if(!currentUser || currentUser.role !== "admin"){
+    alert("Admins only.");
+    return;
+  }
+
+  const dataStr = "data:text/json;charset=utf-8," +
+    encodeURIComponent(JSON.stringify(publicMarkers,null,2));
+
+  const dlAnchor = document.createElement("a");
+  dlAnchor.setAttribute("href", dataStr);
+  dlAnchor.setAttribute("download", "publicMarkers.json");
+  dlAnchor.click();
+}
+
+/* ================= THEME ================= */
+
+function toggleTheme(){
+  document.body.classList.toggle("light");
+  document.body.classList.toggle("dark");
+}
+
+/* ================= LOGIN ================= */
+
+function openLogin(){
+  document.getElementById("loginModal").classList.remove("hidden");
+}
+
+function closeLogin(){
+  document.getElementById("loginModal").classList.add("hidden");
+}
+
+function login(){
+
+  const u = document.getElementById("username").value;
+  const p = document.getElementById("password").value;
+
+  const found = users.find(x=>x.username===u && x.password===p);
+
+  if(found){
+    currentUser = found;
+  } else {
+    currentUser = {username:u, role:"player"};
+  }
+
+  document.getElementById("userDisplay").innerHTML =
+    `👤 ${currentUser.username} (${currentUser.role})`;
+
+  closeLogin();
+}
+
+function logout(){
+  location.reload();
+}
+
+window.onload = initMap;
