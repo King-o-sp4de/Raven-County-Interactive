@@ -1,7 +1,8 @@
 /* ================= SETTINGS ================= */
 
 const MAP_SIZE = 2944;
-const ORIGIN = 1408;
+const ORIGIN_X = 1472 - 64;  // 1408
+const ORIGIN_Z = 1472 - 65;  // 1407
 
 let currentUser = null;
 let map;
@@ -44,8 +45,8 @@ function initMap(){
 /* ================= COORDS ================= */
 
 function updateCoords(e){
-  const x = Math.round(e.latlng.lng - ORIGIN);
-  const z = Math.round(ORIGIN - e.latlng.lat);
+  const x = Math.round(e.latlng.lng - ORIGIN_X);
+  const z = Math.round(ORIGIN_Z - e.latlng.lat);
   document.getElementById("coordsBox").innerHTML = `X: ${x} | Z: ${z}`;
 }
 
@@ -120,8 +121,8 @@ function handleMapClick(e){
 /* ================= RIGHT CLICK BLOCK LOCATION ================= */
 
 function handleRightClick(e){
-  const x = Math.round(e.latlng.lng - ORIGIN);
-  const z = Math.round(ORIGIN - e.latlng.lat);
+  const x = Math.round(e.latlng.lng - ORIGIN_X);
+  const z = Math.round(ORIGIN_Z - e.latlng.lat);
   alert(`Block Location:\nX: ${x}\nZ: ${z}`);
 }
 
@@ -407,5 +408,6 @@ function goToCoords(){
 }
 
 window.onload = initMap;
+
 
 
