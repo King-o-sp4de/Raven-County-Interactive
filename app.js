@@ -1,6 +1,8 @@
 const MAP_SIZE = 2944;
 const ORIGIN = 1472;
-const OFFSET_Z = 130;
+
+const OFFSET_X = 64;
+const OFFSET_Z = -65;
 
 let currentUser = null;
 let map;
@@ -15,6 +17,8 @@ const users = [
   {username:"Kingosp4de",password:"BlaiseKey2026",role:"admin"},
   {username:"Xzyus",password:"HitByAAda4x4",role:"mod"}
 ];
+
+/* INIT */
 
 function initMap(){
   map = L.map('map',{
@@ -38,13 +42,27 @@ function initMap(){
 /* COORDS */
 
 function updateCoords(e){
-  const x = Math.round(e.latlng.lng - ORIGIN);
+  const x = Math.round(e.latlng.lng - ORIGIN + OFFSET_X);
   const z = Math.round(ORIGIN - e.latlng.lat + OFFSET_Z);
   document.getElementById("coordsBox").innerHTML = `X: ${x} | Z: ${z}`;
 }
 
 function centerMap(){
   map.setView([ORIGIN, ORIGIN], 0);
+}
+
+/* SEARCH */
+
+function goToCoords(){
+  const x = parseInt(document.getElementById("searchX").value);
+  const z = parseInt(document.getElementById("searchZ").value);
+
+  if(isNaN(x) || isNaN(z)) return alert("Invalid coords");
+
+  const lat = ORIGIN - (z - OFFSET_Z);
+  const lng = ORIGIN + (x - OFFSET_X);
+
+  map.setView([lat, lng], 2);
 }
 
 /* GRID */
@@ -102,7 +120,7 @@ function handleMapClick(e){
 /* RIGHT CLICK */
 
 function handleRightClick(e){
-  const x=Math.round(e.latlng.lng-ORIGIN);
+  const x=Math.round(e.latlng.lng-ORIGIN+OFFSET_X);
   const z=Math.round(ORIGIN-e.latlng.lat+OFFSET_Z);
   alert(`Block Location:\nX:${x}\nZ:${z}`);
 }
@@ -188,40 +206,23 @@ function editMarker(name){
   location.reload();
 }
 
-function exportPublicMarkers(){
-  if(!currentUser||currentUser.role!=="admin"){ alert("Admins only."); return; }
-  const dataStr="data:text/json;charset=utf-8,"+
-    encodeURIComponent(JSON.stringify(publicMarkers,null,2));
-  const dl=document.createElement("a");
-  dl.setAttribute("href",dataStr);
-  dl.setAttribute("download","publicMarkers.json");
-  dl.click();
-}
-
 /* LOGIN */
 
 function openLogin(){
   document.getElementById("loginModal").classList.remove("hidden");
 }
-
 function closeLogin(){
   document.getElementById("loginModal").classList.add("hidden");
 }
-
 function login(){
   const u=document.getElementById("username").value;
   const p=document.getElementById("password").value;
-
   const found=users.find(x=>x.username===u&&x.password===p);
   currentUser=found?found:{username:u,role:"player"};
-
   document.getElementById("userDisplay").innerHTML=
     `👤 ${currentUser.username} (${currentUser.role})`;
-
   closeLogin();
 }
-
 function logout(){ location.reload(); }
 
 window.onload=initMap;
-
