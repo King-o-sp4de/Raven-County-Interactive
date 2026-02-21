@@ -24,6 +24,17 @@ button{
   margin:2px;
 }
 
+#searchContainer {
+  display: inline-flex;
+  gap: 5px;
+  margin-left: 10px;
+}
+
+#searchContainer input {
+  width: 70px;
+  padding: 4px;
+}
+
 .panel{
   position:fixed;
   background:rgba(0,0,0,0.7);
@@ -68,3 +79,4 @@ button{
   color:white;
   text-shadow:0 0 5px black;
 }
+
