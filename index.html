@@ -1,65 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>Raven County Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#111111">
-
-  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="dark">
 
-<!-- Loading Screen -->
 <div id="loadingScreen">
-  <div class="loaderBox">
+  <div class="loader-box">
     <h2>Loading Raven County...</h2>
     <div class="spinner"></div>
   </div>
 </div>
 
-<div id="app">
-
 <div id="topbar">
-  <button onclick="startMarkerPlacement()">📍 Add Marker</button>
-  <button onclick="startTownPlacement()">🏙 Add Town</button>
-
-  <button id="exportMarkersBtn" class="adminOnly" onclick="exportPublicMarkers()">⬇ Export Markers</button>
-  <button id="exportTownsBtn" class="adminOnly" onclick="exportPublicTowns()">⬇ Export Towns</button>
-
+  <button onclick="startMarkerPlacement()">📍 Marker</button>
+  <button onclick="startTownPlacement()">🏷 Town</button>
   <button onclick="toggleTheme()">🌗 Mode</button>
+  <button onclick="toggleGrid()">🟦 Grid</button>
+  <button onclick="startMeasure()">📏 Measure</button>
+  <button onclick="centerMap()">🎯 Center</button>
   <button onclick="openLogin()">🔐 Login</button>
+  <span id="adminTools" style="display:none;">
+    <button onclick="exportPublicMarkers()">Export Markers</button>
+    <button onclick="exportPublicTowns()">Export Towns</button>
+  </span>
   <span id="userDisplay"></span>
 </div>
 
-  <div id="map"></div>
+<input id="coordSearch" placeholder="X,Z">
+<button onclick="searchCoords()">Go</button>
 
-  <div id="searchBox" class="panel">
-    <input id="searchX" placeholder="X">
-    <input id="searchZ" placeholder="Z">
-    <button onclick="searchCoords()">Go</button>
-  </div>
+<div id="map"></div>
 
-  <div id="legend" class="panel">
-    <b>Legend</b><br>
-    🔴 House<br>
-    🟠 Trader<br>
-    🟡 Tower<br>
-    🟢 Tent<br>
-    🔵 Safezone<br>
-    🟣 Infrastructure
-  </div>
-
-  <div id="coordsBox" class="panel"></div>
+<div id="legend" class="panel">
+  <b>Legend</b><br>
+  🔴 House<br>
+  🟠 Trader<br>
+  🟡 Tower<br>
+  🟢 Tent<br>
+  🔵 Safezone<br>
+  🟣 Infrastructure
 </div>
 
-<!-- Login Modal -->
+<div id="coordsBox" class="panel"></div>
+
 <div id="loginModal" class="modal hidden">
   <div class="modal-content">
     <h3>Login</h3>
@@ -74,4 +65,3 @@
 <script src="app.js"></script>
 </body>
 </html>
-
