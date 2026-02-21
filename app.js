@@ -2,7 +2,7 @@ const MAP_SIZE = 2944;
 const ORIGIN = 1472;
 
 const OFFSET_X = 64;
-const OFFSET_Z = -65;
+const OFFSET_Z = 65;
 
 let currentUser = null;
 let map;
@@ -226,3 +226,4 @@ function login(){
 function logout(){ location.reload(); }
 
 window.onload=initMap;
+
