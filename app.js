@@ -22,18 +22,16 @@ const users = [
   {username:"Xzyus", password:"HitByAAda4x4", role:"mod"}
 ];
 
-
 /* ================= MAP INIT ================= */
 
-function initMap(){
-
-  map = L.map('map',{
-    crs:L.CRS.Simple,
-    minZoom:-2,
-    maxZoom:4
+function initMap() {
+  map = L.map('map', {
+    crs: L.CRS.Simple,
+    minZoom: -2,
+    maxZoom: 4
   });
 
-  const bounds = [[0,0],[MAP_SIZE,MAP_SIZE]];
+  const bounds = [[0, 0], [MAP_SIZE, MAP_SIZE]];
   L.imageOverlay("assets/ravencounty.png", bounds).addTo(map);
   map.fitBounds(bounds);
 
@@ -41,29 +39,32 @@ function initMap(){
   map.on("click", handleMapClick);
   map.on("contextmenu", handleRightClick);
 
-  loadPublicMarkers();
-  loadPublicTowns();
-  loadPrivateMarkers();
+  // Load all layers and wait for them to finish
+  Promise.all([
+    loadPrivateMarkers(),
+    loadPublicMarkers(),
+    loadPublicTowns()
+  ]).finally(() => {
+    // All layers loaded (or failed), hide the loading screen
+    document.getElementById("loadingScreen").style.display = "none";
+  });
 }
-
 
 /* ================= COORDS ================= */
 
-function updateCoords(e){
+function updateCoords(e) {
   const x = Math.round(e.latlng.lng - ORIGIN + OFFSET_X);
   const z = Math.round(ORIGIN - e.latlng.lat + OFFSET_Z);
   document.getElementById("coordsBox").innerHTML = `X: ${x} | Z: ${z}`;
 }
 
-function centerMap(){
+function centerMap() {
   map.setView([ORIGIN, ORIGIN], 0);
 }
 
-
 /* ================= SEARCH ================= */
 
-function searchCoords(){
-
+function searchCoords() {
   const input = document.getElementById("coordSearch").value;
   const parts = input.split(",");
 
@@ -78,12 +79,10 @@ function searchCoords(){
   map.setView([lat, lng], 2);
 }
 
-
 /* ================= GRID ================= */
 
-function toggleGrid(){
-
-  if(gridLayer){
+function toggleGrid() {
+  if(gridLayer) {
     map.removeLayer(gridLayer);
     gridLayer = null;
     return;
@@ -92,7 +91,7 @@ function toggleGrid(){
   gridLayer = L.layerGroup();
   const size = 32;
 
-  for(let i=-ORIGIN;i<=ORIGIN;i+=size){
+  for(let i=-ORIGIN; i<=ORIGIN; i+=size) {
     const p = i + ORIGIN;
     gridLayer.addLayer(L.polyline([[0,p],[MAP_SIZE,p]]));
     gridLayer.addLayer(L.polyline([[p,0],[p,MAP_SIZE]]));
@@ -101,29 +100,27 @@ function toggleGrid(){
   gridLayer.addTo(map);
 }
 
-
 /* ================= MEASURE ================= */
 
-function startMeasure(){
+function startMeasure() {
   measurePoints = [];
   alert("Click two points.");
 }
 
-function handleMapClick(e){
-
-  if(placingMarker){
+function handleMapClick(e) {
+  if(placingMarker) {
     placingMarker = false;
     promptMarkerDetails(e.latlng);
     return;
   }
 
-  if(placingTown){
+  if(placingTown) {
     placingTown = false;
     promptTownDetails(e.latlng);
     return;
   }
 
-  if(measurePoints.length === 1){
+  if(measurePoints.length === 1) {
     measurePoints.push(e.latlng);
 
     const a = measurePoints[0];
@@ -135,32 +132,28 @@ function handleMapClick(e){
 
     alert(`Distance: ${dist} blocks`);
     measurePoints = [];
-  }
-  else if(measurePoints.length === 0){
+  } else if(measurePoints.length === 0) {
     measurePoints.push(e.latlng);
   }
 }
 
-
 /* ================= RIGHT CLICK BLOCK LOCATION ================= */
 
-function handleRightClick(e){
+function handleRightClick(e) {
   const x = Math.round(e.latlng.lng - ORIGIN + OFFSET_X);
   const z = Math.round(ORIGIN - e.latlng.lat + OFFSET_Z);
   alert(`Block Location:\nX: ${x}\nZ: ${z}`);
 }
 
-
 /* ================= MARKERS ================= */
 
-function startMarkerPlacement(){
+function startMarkerPlacement() {
   if(!currentUser) return alert("Login first.");
   placingMarker = true;
   alert("Click map to place marker.");
 }
 
-function promptMarkerDetails(latlng){
-
+function promptMarkerDetails(latlng) {
   const type = prompt("Type: house, trader, tower, tent, safezone, infrastructure");
   if(!type) return;
 
@@ -170,8 +163,7 @@ function promptMarkerDetails(latlng){
   createMarker(latlng, type.toLowerCase(), name, true);
 }
 
-function createMarker(latlng, type, name, isNew){
-
+function createMarker(latlng, type, name, isNew) {
   const colors = {
     house:"red",
     trader:"orange",
@@ -192,8 +184,8 @@ function createMarker(latlng, type, name, isNew){
 
   marker.bindPopup(`<b>${name}</b><br><i>${type}</i>`);
 
-  if(isNew){
-    if(currentUser.role === "admin" || currentUser.role === "mod"){
+  if(isNew) {
+    if(currentUser.role === "admin" || currentUser.role === "mod") {
       publicMarkers.push({latlng,type,name});
     } else {
       privateMarkers.push({latlng,type,name});
@@ -202,19 +194,28 @@ function createMarker(latlng, type, name, isNew){
   }
 }
 
-async function loadPublicMarkers(){
-  try{
-    const res = await fetch("publicMarkers.json");
-    publicMarkers = await res.json();
-    publicMarkers.forEach(m => createMarker(m.latlng,m.type,m.name,false));
-  }catch{}
+function loadPrivateMarkers() {
+  return new Promise((resolve) => {
+    privateMarkers.forEach(m => createMarker(m.latlng, m.type, m.name, false));
+    resolve();
+  });
 }
 
-function loadPrivateMarkers(){
-  privateMarkers.forEach(m => createMarker(m.latlng,m.type,m.name,false));
+function loadPublicMarkers() {
+  return new Promise(async (resolve) => {
+    try {
+      const res = await fetch("publicMarkers.json");
+      publicMarkers = await res.json();
+      publicMarkers.forEach(m => createMarker(m.latlng, m.type, m.name, false));
+    } catch(err) {
+      console.error("Failed to load public markers:", err);
+    } finally {
+      resolve();
+    }
+  });
 }
 
-function exportPublicMarkers(){
+function exportPublicMarkers() {
   if(!currentUser || (currentUser.role !== "admin" && currentUser.role !== "mod"))
     return alert("Admins / Mods only.");
 
@@ -227,25 +228,22 @@ function exportPublicMarkers(){
   dl.click();
 }
 
-
 /* ================= TOWNS ================= */
 
-function startTownPlacement(){
+function startTownPlacement() {
   if(!currentUser) return alert("Login first.");
   placingTown = true;
   alert("Click map to place town label.");
 }
 
-function promptTownDetails(latlng){
-
+function promptTownDetails(latlng) {
   const name = prompt("Town name:");
   if(!name) return;
 
   createTown(latlng,name,true);
 }
 
-function createTown(latlng,name,isNew){
-
+function createTown(latlng,name,isNew) {
   const label = L.divIcon({
     className:"town-label",
     html:`<div class="town-text">${name}</div>`
@@ -253,22 +251,26 @@ function createTown(latlng,name,isNew){
 
   L.marker(latlng,{icon:label}).addTo(map);
 
-  if(isNew){
-    if(currentUser.role === "admin" || currentUser.role === "mod"){
-      publicTowns.push({latlng,name});
-    }
+  if(isNew && (currentUser.role === "admin" || currentUser.role === "mod")) {
+    publicTowns.push({latlng,name});
   }
 }
 
-async function loadPublicTowns(){
-  try{
-    const res = await fetch("publicTowns.json");
-    publicTowns = await res.json();
-    publicTowns.forEach(t => createTown(t.latlng,t.name,false));
-  }catch{}
+function loadPublicTowns() {
+  return new Promise(async (resolve) => {
+    try {
+      const res = await fetch("publicTowns.json");
+      publicTowns = await res.json();
+      publicTowns.forEach(t => createTown(t.latlng,t.name,false));
+    } catch(err) {
+      console.error("Failed to load public towns:", err);
+    } finally {
+      resolve();
+    }
+  });
 }
 
-function exportPublicTowns(){
+function exportPublicTowns() {
   if(!currentUser || (currentUser.role !== "admin" && currentUser.role !== "mod"))
     return alert("Admins / Mods only.");
 
@@ -281,19 +283,17 @@ function exportPublicTowns(){
   dl.click();
 }
 
-
 /* ================= LOGIN ================= */
 
-function openLogin(){
+function openLogin() {
   document.getElementById("loginModal").classList.remove("hidden");
 }
 
-function closeLogin(){
+function closeLogin() {
   document.getElementById("loginModal").classList.add("hidden");
 }
 
-function login(){
-
+function login() {
   const u = document.getElementById("username").value;
   const p = document.getElementById("password").value;
 
@@ -312,8 +312,7 @@ function login(){
   closeLogin();
 }
 
-function updateAdminUI(){
-
+function updateAdminUI() {
   const markersBtn = document.getElementById("exportMarkersBtn");
   const townsBtn = document.getElementById("exportTownsBtn");
 
@@ -326,14 +325,12 @@ function updateAdminUI(){
   }
 }
 
-
 /* ================= THEME ================= */
 
-function toggleTheme(){
+function toggleTheme() {
   document.body.classList.toggle("light");
   document.body.classList.toggle("dark");
 }
-
 
 /* ================= LOAD ================= */
 
