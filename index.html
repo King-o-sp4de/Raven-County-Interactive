@@ -19,15 +19,17 @@
 <div id="app">
 
   <div id="topbar">
+    <input id="coordInput" placeholder="X Z" style="width:100px;">
+    <button onclick="goToCoords()">🔍 Go</button>
     <button onclick="startMarkerPlacement()">📍 Add Marker</button>
     <button onclick="toggleTheme()">🌗 Theme</button>
     <button onclick="toggleGrid()">🟦 Grid</button>
     <button onclick="startMeasure()">📏 Measure</button>
     <button onclick="centerMap()">🎯 Center 0,0</button>
-    <button onclick="openLogin()">🔐 Login</button>
     <button onclick="startTownPlacement()">🏙 Add Town</button>
     <button onclick="exportTownLabels()">💾 Export Towns</button>
     <button onclick="exportPublicMarkers()">💾 Export Public</button>
+    <button onclick="openLogin()">🔐 Login</button>
     <button onclick="logout()">Logout</button>
     <span id="userDisplay"></span>
   </div>
@@ -63,4 +65,5 @@
 <script src="app.js"></script>
 </body>
 </html>
+
 
