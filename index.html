@@ -36,6 +36,12 @@
     <button onclick="openLogin()">🔐 Login</button>
     <button onclick="logout()">Logout</button>
 
+    <div id="searchContainer">
+  <input type="number" id="searchX" placeholder="X">
+  <input type="number" id="searchZ" placeholder="Z">
+  <button onclick="goToCoords()">Go</button>
+</div>
+    
     <!-- Admin Only -->
     <button id="exportMarkersBtn" onclick="exportPublicMarkers()" style="display:none;">⬇ Export Markers</button>
     <button id="exportTownsBtn" onclick="exportPublicTowns()" style="display:none;">⬇ Export Towns</button>
@@ -82,4 +88,5 @@
 
 </body>
 </html>
+
 
