@@ -13,7 +13,7 @@ let privateMarkers = JSON.parse(localStorage.getItem("privateMarkers") || "[]");
 
 const users = [
   {username:"Kingosp4de",password:"BlaiseKey2026",role:"admin"},
-  {username:"Mod",password:"Mod123",role:"mod"}
+  {username:"Xzyus",password:"HitByAAda4x4",role:"mod"}
 ];
 
 function initMap(){
@@ -224,3 +224,4 @@ function login(){
 function logout(){ location.reload(); }
 
 window.onload=initMap;
+
