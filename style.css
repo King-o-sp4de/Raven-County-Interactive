@@ -62,6 +62,10 @@ button {
   left: 10px;
 }
 
+.adminOnly {
+  display: none;
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -112,3 +116,4 @@ button {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
