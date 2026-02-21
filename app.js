@@ -128,7 +128,7 @@ function handleMapClick(e){
 
 function promptMarkerDetails(latlng){
 
-  const type = prompt("Type: house, trader, tower, tent, safezone, infrastructure");
+ const type = prompt("Type: house, trader, tower, tent, safezone, infrastructure, extraction, police, hospital, specialloot, vehicle");
   if(!type) return;
 
   const name = prompt("Enter marker name:");
@@ -139,7 +139,7 @@ function promptMarkerDetails(latlng){
 
 function createMarkerOnMap(latlng, type, name, isNew){
 
-  const colors = {
+  const circleColors = {
     house:"red",
     trader:"orange",
     tower:"yellow",
@@ -148,23 +148,43 @@ function createMarkerOnMap(latlng, type, name, isNew){
     infrastructure:"purple"
   };
 
-  if(!colors[type]){
+ const emojiIcons = {
+  extraction:"⬇️",
+  police:"🚨",
+  hospital:"🏥",
+  specialloot:"💎",
+  vehicle:"🚗"
+};
+  
+  let marker;
+
+  // 🔹 If it's an emoji type
+  if(emojiIcons[type]){
+
+    marker = L.marker(latlng,{
+      icon: L.divIcon({
+        className:"emoji-marker",
+        html:`<div style="font-size:22px;">${emojiIcons[type]}</div>`
+      })
+    }).addTo(map);
+
+  }
+  // 🔹 Otherwise use colored circle
+  else if(circleColors[type]){
+
+    marker = L.circleMarker(latlng,{
+      radius:8,
+      color:circleColors[type],
+      fillColor:circleColors[type],
+      fillOpacity:1
+    }).addTo(map);
+
+  } else {
     alert("Invalid type.");
     return;
   }
 
-  const marker = L.circleMarker(latlng,{
-    radius:8,
-    color:colors[type],
-    fillColor:colors[type],
-    fillOpacity:1
-  }).addTo(map);
-
   marker.bindPopup(`<b>${name}</b><br><i>${type}</i>`);
-
-  // Store metadata
-  marker._markerData = {latlng, type, name};
-  marker._isPublic = (currentUser && (currentUser.role === "admin" || currentUser.role === "mod")) && isNew;
 
   /* ================= DELETE LOGIC ================= */
 
@@ -177,14 +197,12 @@ function createMarkerOnMap(latlng, type, name, isNew){
 
     const isAdmin = currentUser.role === "admin" || currentUser.role === "mod";
 
-    // Determine if this marker exists in public list
     const existsInPublic = publicMarkers.some(m =>
       m.name === name &&
       m.latlng.lat === latlng.lat &&
       m.latlng.lng === latlng.lng
     );
 
-    // 🔒 BLOCK players from deleting public markers
     if(existsInPublic && !isAdmin){
       alert("Only Admins or Mods can delete public markers.");
       return;
@@ -196,20 +214,17 @@ function createMarkerOnMap(latlng, type, name, isNew){
     map.removeLayer(marker);
 
     if(existsInPublic){
-      // Admin deleting public marker
       publicMarkers = publicMarkers.filter(m =>
         !(m.name === name &&
           m.latlng.lat === latlng.lat &&
           m.latlng.lng === latlng.lng)
       );
     } else {
-      // Player deleting private marker
       privateMarkers = privateMarkers.filter(m =>
         !(m.name === name &&
           m.latlng.lat === latlng.lat &&
           m.latlng.lng === latlng.lng)
       );
-
       localStorage.setItem("privateMarkers", JSON.stringify(privateMarkers));
     }
 
@@ -378,6 +393,7 @@ function toggleTheme(){
   document.body.classList.toggle("light");
   document.body.classList.toggle("dark");
 }
+
 
 
 
