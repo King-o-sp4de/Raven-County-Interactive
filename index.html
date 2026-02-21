@@ -1,62 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Raven County Interactive Map</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Raven County Interactive Map</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<link rel="stylesheet" href="style.css">
 
-  <link rel="stylesheet" href="style.css">
 </head>
-
 <body class="dark">
 
-<div id="app">
+<div id="topbar">
 
-  <div id="topbar">
-    <button onclick="startMarkerPlacement()">📍 Add Marker</button>
-    <button onclick="startTownPlacement()">🏙 Add Town</button>
-    <button onclick="toggleGrid()">🟦 Grid</button>
-    <button onclick="centerMap()">🎯 Center 0,0</button>
-    <button onclick="exportPublicMarkers()">⬇ Export Public</button>
+<button onclick="startMarkerPlacement()">📍 Add Marker</button>
+<button onclick="startTownPlacement()">🏙 Add Town</button>
+<button onclick="toggleGrid()">🟦 Grid</button>
+<button onclick="startMeasure()">📏 Measure</button>
+<button onclick="centerMap()">🎯 Center</button>
 
-    <input id="coordSearch" placeholder="X Z">
-    <button onclick="searchCoords()">🔎 Go</button>
+<input id="searchX" placeholder="X">
+<input id="searchZ" placeholder="Z">
+<button onclick="searchCoords()">🔎 Go</button>
 
-    <button onclick="openLogin()">🔐 Login</button>
-    <button onclick="logout()">Logout</button>
-
-    <span id="userDisplay"></span>
-  </div>
-
-  <div id="map"></div>
-
-  <div id="legend" class="panel">
-    <b>Legend</b><br>
-    🔴 House<br>
-    🟠 Trader<br>
-    🟡 Tower<br>
-    🟢 Tent<br>
-    🔵 Safezone<br>
-    🟣 Infrastructure
-  </div>
-
-  <div id="coordsBox" class="panel">X: 0 | Z: 0</div>
+<button onclick="exportPublicMarkers()">⬇ Export Markers</button>
+<button onclick="exportPublicTowns()">⬇ Export Towns</button>
 
 </div>
 
-<!-- LOGIN MODAL -->
-<div id="loginModal" class="modal hidden">
-  <div class="modal-content">
-    <h3>Login</h3>
-    <input id="username" placeholder="Username">
-    <input id="password" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <button onclick="closeLogin()">Cancel</button>
-  </div>
-</div>
+<div id="map"></div>
+
+<div id="coordsBox" class="panel"></div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="app.js"></script>
