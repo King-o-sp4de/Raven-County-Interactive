@@ -3,7 +3,7 @@
   "short_name": "MineZ Map",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": transparent,
+  "background_color": "transparent",
   "theme_color": "#111111",
   "icons": [
     {
@@ -18,5 +18,6 @@
     }
   ]
 }
+
 
 
