@@ -65,12 +65,17 @@ function centerMap(){
 /* ================= SEARCH ================= */
 
 function goToCoords(){
+
   const x = parseInt(document.getElementById("searchX").value);
   const z = parseInt(document.getElementById("searchZ").value);
-  if(isNaN(x) || isNaN(z)) return;
 
-  const lat = ORIGIN - (z - OFFSET_Z);
-  const lng = (x - OFFSET_X) + ORIGIN;
+  if(isNaN(x) || isNaN(z)){
+    alert("Enter valid coordinates.");
+    return;
+  }
+
+  const lat = ORIGIN - (z - 65);
+  const lng = (x - 64) + ORIGIN;
 
   map.setView([lat, lng], 2);
 }
@@ -306,3 +311,4 @@ function toggleTheme(){
   document.body.classList.toggle("light");
   document.body.classList.toggle("dark");
 }
+
