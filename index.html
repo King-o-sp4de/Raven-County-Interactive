@@ -5,24 +5,15 @@
   <title>Raven County Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- 🚫 Disable favicon request completely -->
   <link rel="icon" href="data:,">
-  <link rel="shortcut icon" href="data:,">
-  <link rel="apple-touch-icon" href="data:,">
-
-  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#111111">
 
-  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="dark">
-
-<!-- Loading Screen -->
 
 <div id="app">
 
@@ -31,29 +22,20 @@
     <button onclick="startTownPlacement()">🏘️ Add Town Label</button>
     <button onclick="toggleTheme()">🌗 Mode</button>
     <button onclick="toggleGrid()">🟦 Grid</button>
-    <button onclick="startMeasure()">📏 Measure</button>
     <button onclick="centerMap()">🎯 Center</button>
     <button onclick="openLogin()">🔐 Login</button>
     <button onclick="logout()">Logout</button>
 
     <div id="searchContainer">
-  <input type="number" id="searchX" placeholder="X">
-  <input type="number" id="searchZ" placeholder="Z">
-  <button onclick="goToCoords()">Go</button>
-</div>
-    
-    <!-- Admin Only -->
+      <input type="number" id="searchX" placeholder="X">
+      <input type="number" id="searchZ" placeholder="Z">
+      <button onclick="goToCoords()">Go</button>
+    </div>
+
     <button id="exportMarkersBtn" onclick="exportPublicMarkers()" style="display:none;">⬇ Export Markers</button>
     <button id="exportTownsBtn" onclick="exportPublicTowns()" style="display:none;">⬇ Export Towns</button>
 
     <span id="userDisplay"></span>
-  </div>
-
-  <!-- Search -->
-  <div id="searchBar">
-    <input id="searchX" placeholder="X">
-    <input id="searchZ" placeholder="Z">
-    <button onclick="goToCoords()">Go</button>
   </div>
 
   <div id="map"></div>
@@ -72,7 +54,6 @@
 
 </div>
 
-<!-- Login Modal -->
 <div id="loginModal" class="modal hidden">
   <div class="modal-content">
     <h3>Login</h3>
@@ -88,5 +69,3 @@
 
 </body>
 </html>
-
-
