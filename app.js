@@ -307,6 +307,38 @@ function createTownLabel(latlng,name,isNew){
   }
 }
 
+/* ================= EXPORT ================= */
+
+function exportPublicMarkers(){
+  if(!currentUser || (currentUser.role!=="admin" && currentUser.role!=="mod")){
+    alert("Admins or Mods only.");
+    return;
+  }
+
+  const dataStr = "data:text/json;charset=utf-8," +
+    encodeURIComponent(JSON.stringify(publicMarkers,null,2));
+
+  const dl = document.createElement("a");
+  dl.href = dataStr;
+  dl.download = "publicMarkers.json";
+  dl.click();
+}
+
+function exportPublicTowns(){
+  if(!currentUser || (currentUser.role!=="admin" && currentUser.role!=="mod")){
+    alert("Admins or Mods only.");
+    return;
+  }
+
+  const dataStr = "data:text/json;charset=utf-8," +
+    encodeURIComponent(JSON.stringify(publicTowns,null,2));
+
+  const dl = document.createElement("a");
+  dl.href = dataStr;
+  dl.download = "publicTowns.json";
+  dl.click();
+}
+
 /* ================= LOGIN ================= */
 
 function openLogin(){
@@ -346,6 +378,7 @@ function toggleTheme(){
   document.body.classList.toggle("light");
   document.body.classList.toggle("dark");
 }
+
 
 
 
