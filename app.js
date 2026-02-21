@@ -1,28 +1,22 @@
-/* ================= SETTINGS ================= */
-
 const MAP_SIZE = 2944;
-const ORIGIN_X = 1472 - 64;  // 1408
-const ORIGIN_Z = 1472 - 65;  // 1407
+const ORIGIN = 1472;
+const OFFSET_Z = 130;
 
 let currentUser = null;
 let map;
 let gridLayer = null;
 let measurePoints = [];
-let placingMarker = null;
+let placingMarker = false;
 
 let publicMarkers = [];
 let privateMarkers = JSON.parse(localStorage.getItem("privateMarkers") || "[]");
-let townLabels = [];
 
 const users = [
   {username:"Kingosp4de",password:"BlaiseKey2026",role:"admin"},
-  {username:"Xzyus",password:"HitByAAda4x4",role:"mod"}
+  {username:"Mod",password:"Mod123",role:"mod"}
 ];
 
-/* ================= MAP INIT ================= */
-
 function initMap(){
-
   map = L.map('map',{
     crs:L.CRS.Simple,
     minZoom:-2,
@@ -39,14 +33,13 @@ function initMap(){
 
   loadPublicMarkers();
   loadPrivateMarkers();
-  loadTownLabels();
 }
 
-/* ================= COORDS ================= */
+/* COORDS */
 
 function updateCoords(e){
-  const x = Math.round(e.latlng.lng - ORIGIN_X);
-  const z = Math.round(ORIGIN_Z - e.latlng.lat);
+  const x = Math.round(e.latlng.lng - ORIGIN);
+  const z = Math.round(ORIGIN - e.latlng.lat + OFFSET_Z);
   document.getElementById("coordsBox").innerHTML = `X: ${x} | Z: ${z}`;
 }
 
@@ -54,21 +47,20 @@ function centerMap(){
   map.setView([ORIGIN, ORIGIN], 0);
 }
 
-/* ================= GRID ================= */
+/* GRID */
 
 function toggleGrid(){
-
   if(gridLayer){
     map.removeLayer(gridLayer);
-    gridLayer = null;
+    gridLayer=null;
     return;
   }
 
-  gridLayer = L.layerGroup();
-  const size = 32;
+  gridLayer=L.layerGroup();
+  const size=32;
 
   for(let i=-ORIGIN;i<=ORIGIN;i+=size){
-    const p = i + ORIGIN;
+    const p=i+ORIGIN;
     gridLayer.addLayer(L.polyline([[0,p],[MAP_SIZE,p]]));
     gridLayer.addLayer(L.polyline([[p,0],[p,MAP_SIZE]]));
   }
@@ -76,105 +68,76 @@ function toggleGrid(){
   gridLayer.addTo(map);
 }
 
-/* ================= MEASURE ================= */
+/* MEASURE */
 
 function startMeasure(){
-  measurePoints = [];
-  alert("Click two points to measure.");
+  measurePoints=[];
+  alert("Click two points.");
 }
 
 function handleMapClick(e){
-
-  if(placingMarker === "town"){
-    placingMarker = null;
-    const name = prompt("Enter town name:");
-    if(name){
-      createTownLabel(e.latlng, name, true);
-    }
-    return;
-  }
-
-  if(placingMarker === "marker"){
-    placingMarker = null;
+  if(placingMarker){
+    placingMarker=false;
     promptMarkerDetails(e.latlng);
     return;
   }
 
-  if(measurePoints.length === 1){
+  if(measurePoints.length===1){
     measurePoints.push(e.latlng);
+    const a=measurePoints[0];
+    const b=measurePoints[1];
 
-    const a = measurePoints[0];
-    const b = measurePoints[1];
+    const dx=Math.round(b.lng-a.lng);
+    const dz=Math.round(a.lat-b.lat);
+    const dist=Math.sqrt(dx*dx+dz*dz).toFixed(2);
 
-    const dx = Math.round(b.lng - a.lng);
-    const dz = Math.round(a.lat - b.lat);
-    const dist = Math.sqrt(dx*dx + dz*dz).toFixed(2);
-
-    alert(`Distance: ${dist} blocks\nΔX: ${dx}\nΔZ: ${dz}`);
-    measurePoints = [];
+    alert(`Distance: ${dist} blocks`);
+    measurePoints=[];
   }
-  else if(measurePoints.length === 0){
+  else if(measurePoints.length===0){
     measurePoints.push(e.latlng);
   }
 }
 
-/* ================= RIGHT CLICK BLOCK LOCATION ================= */
+/* RIGHT CLICK */
 
 function handleRightClick(e){
-  const x = Math.round(e.latlng.lng - ORIGIN_X);
-  const z = Math.round(ORIGIN_Z - e.latlng.lat);
-  alert(`Block Location:\nX: ${x}\nZ: ${z}`);
+  const x=Math.round(e.latlng.lng-ORIGIN);
+  const z=Math.round(ORIGIN-e.latlng.lat+OFFSET_Z);
+  alert(`Block Location:\nX:${x}\nZ:${z}`);
 }
 
-/* ================= PUBLIC MARKERS ================= */
+/* MARKERS */
 
 async function loadPublicMarkers(){
-  try {
-    const res = await fetch("publicMarkers.json");
-    publicMarkers = await res.json();
-
-    publicMarkers.forEach(m=>{
-      createMarkerOnMap(m.latlng, m.type, m.name, false);
-    });
-
-  } catch(err){
-    console.log("No public markers found.");
-  }
+  try{
+    const res=await fetch("publicMarkers.json");
+    publicMarkers=await res.json();
+    publicMarkers.forEach(m=>createMarker(m.latlng,m.type,m.name,false));
+  }catch{}
 }
-
-/* ================= PRIVATE MARKERS ================= */
 
 function loadPrivateMarkers(){
-  privateMarkers.forEach(m=>{
-    createMarkerOnMap(m.latlng, m.type, m.name, false);
-  });
+  privateMarkers.forEach(m=>createMarker(m.latlng,m.type,m.name,false,true));
 }
 
-/* ================= CREATE MARKER ================= */
-
 function startMarkerPlacement(){
-  if(!currentUser){
-    alert("Login first.");
-    return;
-  }
-  placingMarker = "marker";
-  alert("Click map to place marker.");
+  if(!currentUser){ alert("Login first."); return; }
+  placingMarker=true;
+  alert("Click map.");
 }
 
 function promptMarkerDetails(latlng){
-
-  const type = prompt("Type: house, trader, tower, tent, safezone, infrastructure");
+  const type=prompt("house, trader, tower, tent, safezone, infrastructure");
   if(!type) return;
-
-  const name = prompt("Enter marker name:");
+  const name=prompt("Marker name:");
   if(!name) return;
-
-  createMarkerOnMap(latlng, type.toLowerCase(), name, true);
+  createMarker(latlng,type.toLowerCase(),name,true);
 }
 
-function createMarkerOnMap(latlng, type, name, isNew){
+function createMarker(latlng,type,name,isNew,isPrivate=false){
 
-  const colors = {
+  const colors={
     house:"red",
     trader:"orange",
     tower:"yellow",
@@ -183,133 +146,59 @@ function createMarkerOnMap(latlng, type, name, isNew){
     infrastructure:"purple"
   };
 
-  if(!colors[type]){
-    alert("Invalid type.");
-    return;
-  }
+  if(!colors[type]){ alert("Invalid type."); return; }
 
-  const marker = L.circleMarker(latlng,{
+  const marker=L.circleMarker(latlng,{
     radius:8,
     color:colors[type],
     fillColor:colors[type],
     fillOpacity:1
   }).addTo(map);
 
-  const popupContent = `
+  marker.bindPopup(`
     <b>${name}</b><br>
-    <i>${type}</i><br><br>
-    <button onclick="editMarker('${name}', '${type}', ${latlng.lat}, ${latlng.lng})">✏ Edit</button>
-    <button onclick="deleteMarker('${name}', ${latlng.lat}, ${latlng.lng})">🗑 Delete</button>
-  `;
-
-  marker.bindPopup(popupContent);
+    <i>${type}</i><br>
+    <button onclick="editMarker('${name}')">Edit</button>
+    <button onclick="deleteMarker('${name}')">Delete</button>
+  `);
 
   if(isNew){
-    if(currentUser.role === "admin" || currentUser.role === "mod"){
-      publicMarkers.push({latlng, type, name});
-    } else {
-      privateMarkers.push({latlng, type, name});
-      localStorage.setItem("privateMarkers", JSON.stringify(privateMarkers));
+    if(currentUser.role==="admin"||currentUser.role==="mod"){
+      publicMarkers.push({latlng,type,name});
+    }else{
+      privateMarkers.push({latlng,type,name});
+      localStorage.setItem("privateMarkers",JSON.stringify(privateMarkers));
     }
   }
 }
 
-/* ================= TOWN LABELS ================= */
-
-async function loadTownLabels(){
-  try {
-    const res = await fetch("townLabels.json");
-    townLabels = await res.json();
-
-    townLabels.forEach(t=>{
-      createTownLabel(t.latlng, t.name, false);
-    });
-
-  } catch(err){
-    console.log("No town labels found.");
-  }
+function deleteMarker(name){
+  publicMarkers=publicMarkers.filter(m=>m.name!==name);
+  privateMarkers=privateMarkers.filter(m=>m.name!==name);
+  localStorage.setItem("privateMarkers",JSON.stringify(privateMarkers));
+  location.reload();
 }
 
-function startTownPlacement(){
-  if(!currentUser || (currentUser.role !== "admin" && currentUser.role !== "mod")){
-    alert("Admins or Mods only.");
-    return;
-  }
-  placingMarker = "town";
-  alert("Click map to place town label.");
+function editMarker(name){
+  const newName=prompt("New name:");
+  if(!newName) return;
+  publicMarkers.forEach(m=>{ if(m.name===name) m.name=newName; });
+  privateMarkers.forEach(m=>{ if(m.name===name) m.name=newName; });
+  localStorage.setItem("privateMarkers",JSON.stringify(privateMarkers));
+  location.reload();
 }
-
-function createTownLabel(latlng, name, isNew){
-
-  const label = L.marker(latlng, {
-    icon: L.divIcon({
-      className: "town-label",
-      html: name,
-      iconSize: null
-    }),
-    interactive: false
-  });
-
-  label.addTo(map);
-
-  if(isNew){
-    townLabels.push({latlng, name});
-    alert("Town added. Export JSON to update server.");
-  }
-}
-
-function exportTownLabels(){
-  if(!currentUser || currentUser.role !== "admin"){
-    alert("Admins only.");
-    return;
-  }
-
-function exportPublicMarkers() {
-  const dataStr = JSON.stringify(publicMarkers, null, 2);
-  const blob = new Blob([dataStr], { type: "application/json" });
-
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "publicMarkers.json";
-  link.click();
-
-  URL.revokeObjectURL(link.href);
-}
-
-  const dataStr = "data:text/json;charset=utf-8," +
-    encodeURIComponent(JSON.stringify(townLabels,null,2));
-
-  const dlAnchor = document.createElement("a");
-  dlAnchor.setAttribute("href", dataStr);
-  dlAnchor.setAttribute("download", "townLabels.json");
-  dlAnchor.click();
-}
-
-/* ================= EXPORT PUBLIC ================= */
 
 function exportPublicMarkers(){
-  if(!currentUser || currentUser.role !== "admin"){
-    alert("Admins only.");
-    return;
-  }
-
-  const dataStr = "data:text/json;charset=utf-8," +
+  if(!currentUser||currentUser.role!=="admin"){ alert("Admins only."); return; }
+  const dataStr="data:text/json;charset=utf-8,"+
     encodeURIComponent(JSON.stringify(publicMarkers,null,2));
-
-  const dlAnchor = document.createElement("a");
-  dlAnchor.setAttribute("href", dataStr);
-  dlAnchor.setAttribute("download", "publicMarkers.json");
-  dlAnchor.click();
+  const dl=document.createElement("a");
+  dl.setAttribute("href",dataStr);
+  dl.setAttribute("download","publicMarkers.json");
+  dl.click();
 }
 
-/* ================= THEME ================= */
-
-function toggleTheme(){
-  document.body.classList.toggle("light");
-  document.body.classList.toggle("dark");
-}
-
-/* ================= LOGIN ================= */
+/* LOGIN */
 
 function openLogin(){
   document.getElementById("loginModal").classList.remove("hidden");
@@ -320,94 +209,18 @@ function closeLogin(){
 }
 
 function login(){
+  const u=document.getElementById("username").value;
+  const p=document.getElementById("password").value;
 
-  const u = document.getElementById("username").value;
-  const p = document.getElementById("password").value;
+  const found=users.find(x=>x.username===u&&x.password===p);
+  currentUser=found?found:{username:u,role:"player"};
 
-  const found = users.find(x=>x.username===u && x.password===p);
-
-  if(found){
-    currentUser = found;
-  } else {
-    currentUser = {username:u, role:"player"};
-  }
-
-  document.getElementById("userDisplay").innerHTML =
+  document.getElementById("userDisplay").innerHTML=
     `👤 ${currentUser.username} (${currentUser.role})`;
 
   closeLogin();
 }
 
-function logout(){
-  location.reload();
-}
+function logout(){ location.reload(); }
 
-/* ================= START ================= */
-
-function editMarker(name, type, lat, lng){
-
-  const newName = prompt("New name:", name);
-  if(!newName) return;
-
-  const newType = prompt("New type:", type);
-  if(!newType) return;
-
-  deleteMarker(name, lat, lng);
-
-  createMarkerOnMap({lat:lat, lng:lng}, newType.toLowerCase(), newName, true);
-}
-
-function deleteMarker(name, lat, lng){
-
-  map.eachLayer(layer => {
-    if(layer instanceof L.CircleMarker){
-      const ll = layer.getLatLng();
-      if(ll.lat === lat && ll.lng === lng){
-        map.removeLayer(layer);
-      }
-    }
-  });
-
-  publicMarkers = publicMarkers.filter(m =>
-    !(m.latlng.lat === lat && m.latlng.lng === lng)
-  );
-
-  privateMarkers = privateMarkers.filter(m =>
-    !(m.latlng.lat === lat && m.latlng.lng === lng)
-  );
-
-  localStorage.setItem("privateMarkers", JSON.stringify(privateMarkers));
-}
-
-function goToCoords(){
-
-  const input = document.getElementById("coordInput").value.trim();
-  const parts = input.split(" ");
-
-  if(parts.length !== 2){
-    alert("Use format: X Z");
-    return;
-  }
-
-  const x = parseInt(parts[0]);
-  const z = parseInt(parts[1]);
-
-  if(isNaN(x) || isNaN(z)){
-    alert("Invalid numbers");
-    return;
-  }
-
-  const lat = ORIGIN - z;
-  const lng = x + ORIGIN;
-
-  map.setView([lat, lng], 2);
-
-  L.marker([lat, lng]).addTo(map)
-    .bindPopup(`X: ${x}<br>Z: ${z}`)
-    .openPopup();
-}
-
-window.onload = initMap;
-
-
-
+window.onload=initMap;
