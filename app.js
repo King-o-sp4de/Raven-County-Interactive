@@ -194,12 +194,18 @@ function createMarkerOnMap(latlng, type, name, isNew){
     fillOpacity:1
   }).addTo(map);
 
-  marker.bindPopup(`<b>${name}</b><br><i>${type}</i>`);
+  const popupContent = `
+    <b>${name}</b><br>
+    <i>${type}</i><br><br>
+    <button onclick="editMarker('${name}', '${type}', ${latlng.lat}, ${latlng.lng})">✏ Edit</button>
+    <button onclick="deleteMarker('${name}', ${latlng.lat}, ${latlng.lng})">🗑 Delete</button>
+  `;
+
+  marker.bindPopup(popupContent);
 
   if(isNew){
     if(currentUser.role === "admin" || currentUser.role === "mod"){
       publicMarkers.push({latlng, type, name});
-      alert("Public marker added. Export JSON to update server.");
     } else {
       privateMarkers.push({latlng, type, name});
       localStorage.setItem("privateMarkers", JSON.stringify(privateMarkers));
@@ -336,5 +342,6 @@ function logout(){
 }
 
 /* ================= START ================= */
+
 
 window.onload = initMap;
